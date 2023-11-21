@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstdlib>
 #include "funciones.h"
 
 using namespace std;
@@ -118,7 +119,6 @@ int buscarMayoriaCartas(Jugador jugador, int indice_carta)
 int generarNumero(int n)
 {
     int valor = rand() % n;
-
     return valor;
 }
 void mostrarEstadisticas()
