@@ -4,6 +4,42 @@
 
 using namespace std;
 
+void JugarClutch(Jugador jugador1, Jugador jugador2, int mazo[][5], char tipo_carta[], string v_palos[])
+{
+    mensajeBienvenida();
+    menuPrincipal(jugador1, jugador2, mazo, tipo_carta, v_palos);
+    jugar(jugador1, jugador2, mazo, tipo_carta, v_palos);
+}
+
+void mensajeBienvenida()
+{
+    cout << "Bienvenido a CLUTCH.\n\n";
+}
+
+void menuPrincipal(Jugador jugador1, Jugador jugador2, int mazo[][5], char tipo_carta[], string v_palos[])
+{
+    int eleccion;
+    eleccion = mostrarMenu();
+
+    switch (eleccion)
+    {
+    case 1:
+        jugar(jugador1, jugador2, mazo, tipo_carta, v_palos);
+        break;
+    case 2:
+        mostrarEstadisticas();
+        break;
+    case 3:
+        mostrarCreditos();
+        break;
+    case 0:
+        break;
+    default:
+        validarEleccion(eleccion); //   Corto la ejecucion del programa.
+        cout << endl;
+    }
+}
+
 int mostrarMenu()
 {
     int opcion;
@@ -18,41 +54,46 @@ int mostrarMenu()
     cout << "0 - SALIR\n";
     cout << "Ingrese la opcion elegida: ";
     cin >> opcion;
+    cout << endl;
 
     return opcion;
 }
 
-void evaluarOpcion(int opcion, Jugador jugador1, Jugador jugador2, int mazo[][5], char tipo_carta[], string v_palos[])
+void validarEleccion(int eleccion)
 {
-    switch (opcion)
+    while (eleccion < 0 || eleccion > 3)
     {
-    case 1:
-        jugar(jugador1, jugador2, mazo, tipo_carta, v_palos);
-        break;
-    case 2:
-        mostrarEstadisticas();
-        break;
-    case 3:
-        mostrarCreditos();
-        break;
-    case 0:
-        break; //   Corto la ejecucion del programa.
-    default:
-        cout << "La opcion elegida es incorrecta. Vuelva a intentarlo";
-        mostrarMenu(); //   Vuelvo a llamar a mostrarMenu para obtener un valor correcto.
+        cout << "ERROR: La opcion ingresada es incorrecta. \n Intentelo nuevamente a continuacion: \n\n";
+        eleccion = mostrarMenu();
     }
 }
 
 void jugar(Jugador jugador1, Jugador jugador2, int mazo[][5], char tipo_carta[], string v_palos[])
 {
-    // Crear funcion para almacenar nombres
+    pedirNombres(jugador1, jugador2);
     mezclarMazo(mazo);
     repartirCartas(jugador1, mazo);
     repartirCartas(jugador2, mazo);
-    cout << "Mano jugador" << jugador1.nombre << endl;
     mostrarMano(jugador1, tipo_carta, v_palos);
-    cout << "Mano jugador" << jugador1.nombre << endl;
     mostrarMano(jugador2, tipo_carta, v_palos);
+}
+
+void pedirNombres(Jugador &jugador1, Jugador &jugador2)
+{
+    char confirma = 'N';
+
+    while (confirma != 'S')
+    {
+        cout << "Registre los nombres de los jugadores: \n";
+        cout << "Jugador 1: ";
+        cin >> jugador1.nombre;
+        cout << "Jugador 2: ";
+        cin >> jugador2.nombre;
+
+        cout << "Confirma los nombrse de usuario? S/N: ";
+        cin >> confirma;
+        confirma = toupper(confirma);
+    }
 }
 
 void mezclarMazo(int mazo[][5])
@@ -95,6 +136,8 @@ void repartirCartas(Jugador &jugador, int mazo[][5]) //&jugador es pasado como r
 
 void mostrarMano(Jugador jugador, char tipo_carta[], string v_palos[])
 {
+    cout << "Mano jugador: " << jugador.nombre << endl;
+
     for (int i = 0; i < 5; i++)
     {
         if (jugador.mano[0][i] == 0)

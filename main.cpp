@@ -17,13 +17,10 @@ int main()
         0, 1, 2, 3, 4,
         0, 1, 2, 3, 4};
 
-    int opcion;
-    opcion = mostrarMenu();
-
     Jugador jugador1;
     Jugador jugador2;
 
-    evaluarOpcion(opcion, jugador1, jugador2, mazo, tipo_carta, v_palos);
+    JugarClutch(jugador1, jugador2, mazo, tipo_carta, v_palos);
 
     return 0;
 }
