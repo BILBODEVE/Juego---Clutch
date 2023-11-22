@@ -45,10 +45,13 @@ void evaluarOpcion(int opcion, Jugador jugador1, Jugador jugador2, int mazo[][5]
 
 void jugar(Jugador jugador1, Jugador jugador2, int mazo[][5], char tipo_carta[], string v_palos[])
 {
+    // Crear funcion para almacenar nombres
     mezclarMazo(mazo);
     repartirCartas(jugador1, mazo);
     repartirCartas(jugador2, mazo);
+    cout << "Mano jugador" << jugador1.nombre << endl;
     mostrarMano(jugador1, tipo_carta, v_palos);
+    cout << "Mano jugador" << jugador1.nombre << endl;
     mostrarMano(jugador2, tipo_carta, v_palos);
 }
 
@@ -105,7 +108,7 @@ void mostrarMano(Jugador jugador, char tipo_carta[], string v_palos[])
     }
 }
 
-void primerTurno(bool max, Jugador jugador, int cont1, int cont2)
+void primerTurno(bool max, Jugador jugador1, Jugador jugador2, int cont1, int cont2)
 {
     int indice_carta = 0; // Indice carta corresponde a los indices de el vector tipo_carta
     int comienza = 0;     // Comienza almacena el numero del jugador al cual le toca jugar primero.
@@ -114,7 +117,7 @@ void primerTurno(bool max, Jugador jugador, int cont1, int cont2)
     {
         cont1 = contarCartas(jugador1, indice_carta);
         cont2 = contarCartas(jugador2, indice_carta);
-        comienza = buscarMaximo(jugador, cont1, cont2);
+        comienza = buscarMaximo(cont1, cont2);
 
         indice_carta++; // Si comienza sigue siendo =0 , sigo buscando un maximo;
     }
@@ -143,7 +146,7 @@ int contarCartas(Jugador jugador, int indice_carta)
     return cont;
 }
 
-int buscarMaximo(Jugador jugador, int cont1, int cont2)
+int buscarMaximo(int cont1, int cont2)
 {
     if (cont1 > cont2)
     {

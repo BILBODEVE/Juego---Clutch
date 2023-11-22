@@ -20,6 +20,9 @@ int main()
     int opcion;
     opcion = mostrarMenu();
 
+    Jugador jugador1;
+    Jugador jugador2;
+
     evaluarOpcion(opcion, jugador1, jugador2, mazo, tipo_carta, v_palos);
 
     return 0;
