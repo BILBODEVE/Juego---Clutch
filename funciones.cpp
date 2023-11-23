@@ -137,6 +137,25 @@ void repartirCartas(Jugador &jugador, int mazo[][5]) //&jugador es pasado como r
         jugador.mano[1][i] = palo;
         mazo[palo][carta] = -1; // Una vez asignado el elemento lo quito del mazo dando valor -1.
     }
+
+    validarMano(jugador, mazo);
+}
+void validarMano(Jugador jugador, int mazo[][5])
+{
+    int cont = 0;
+
+    for (int i = 0; i < 4; i++) // El contador va hasta el indice 3 ya que a partir del indice 4 no existen mas elementos dentro del array.
+    {
+        if (jugador.mano[0][i] + 1 == jugador.mano[0][i + 1])
+        {
+            cont++;
+        }
+    }
+
+    if (cont == 4)
+    {
+        repartirCartas(jugador, mazo);
+    }
 }
 
 void mostrarMano(Jugador jugador, string tipo_carta[], string v_palos[])

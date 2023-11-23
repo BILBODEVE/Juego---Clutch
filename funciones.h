@@ -18,10 +18,11 @@ void validarEleccion(int eleccion);
 // Funciones para desarrollar la partida.
 void jugar(Jugador jugador1, Jugador jugador2, int mazo[][5], std::string tipo_carta[], std::string v_palos[]);
 void pedirNombres(Jugador &jugador1, Jugador &jugador2);
+void primerTurno(Jugador jugador1, Jugador jugador2, std::string tipo_carta[]);
 void mezclarMazo(int mazo[][5]);
 void repartirCartas(Jugador &jugador, int mazo[][5]);
+void validarMano(Jugador jugador, int mazo[][5]);
 void mostrarMano(Jugador jugador, std::string tipo_carta[], std::string v_palos[]); // std::string lo utilizo para no incluir espacios de nombre.
-void primerTurno(Jugador jugador1, Jugador jugador2, std::string tipo_carta[]);
 
 // Estadistica
 void mostrarEstadisticas();
