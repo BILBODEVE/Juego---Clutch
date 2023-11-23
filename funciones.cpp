@@ -4,7 +4,7 @@
 
 using namespace std;
 
-void JugarClutch(Jugador jugador1, Jugador jugador2, int mazo[][5], char tipo_carta[], string v_palos[])
+void JugarClutch(Jugador jugador1, Jugador jugador2, int mazo[][5], std::string tipo_carta[], string v_palos[])
 {
     mensajeBienvenida();
     menuPrincipal(jugador1, jugador2, mazo, tipo_carta, v_palos);
@@ -15,7 +15,7 @@ void mensajeBienvenida()
     cout << "Bienvenido a CLUTCH.\n\n";
 }
 
-void menuPrincipal(Jugador jugador1, Jugador jugador2, int mazo[][5], char tipo_carta[], string v_palos[])
+void menuPrincipal(Jugador jugador1, Jugador jugador2, int mazo[][5], std::string tipo_carta[], string v_palos[])
 {
     int eleccion;
     eleccion = mostrarMenu();
@@ -67,14 +67,17 @@ void validarEleccion(int eleccion)
     }
 }
 
-void jugar(Jugador jugador1, Jugador jugador2, int mazo[][5], char tipo_carta[], string v_palos[])
+void jugar(Jugador jugador1, Jugador jugador2, int mazo[][5], string tipo_carta[], string v_palos[])
 {
     pedirNombres(jugador1, jugador2);
     mezclarMazo(mazo);
     repartirCartas(jugador1, mazo);
     repartirCartas(jugador2, mazo);
-    primerTurno(jugador1, jugador2);
+    cout << "---------------------------------------\n";
+    primerTurno(jugador1, jugador2, tipo_carta);
+    cout << "---------------------------------------\n";
     mostrarMano(jugador1, tipo_carta, v_palos);
+    cout << "\n\n";
     mostrarMano(jugador2, tipo_carta, v_palos);
 }
 
@@ -84,15 +87,17 @@ void pedirNombres(Jugador &jugador1, Jugador &jugador2)
 
     while (confirma != 'S')
     {
-        cout << "Registre los nombres de los jugadores: \n";
-        cout << "Jugador 1: ";
+        cout << "---------------------------------------\n";
+        cout << "#Registre los nombres de los jugadores: \n";
+        cout << " Jugador 1: ";
         cin >> jugador1.nombre;
-        cout << "Jugador 2: ";
+        cout << " Jugador 2: ";
         cin >> jugador2.nombre;
 
-        cout << "Confirma los nombrse de usuario? S/N: ";
+        cout << "#Confirma los nombrse de usuario? S/N: ";
         cin >> confirma;
         confirma = toupper(confirma);
+        cout << "---------------------------------------\n\n";
     }
 }
 
@@ -134,62 +139,54 @@ void repartirCartas(Jugador &jugador, int mazo[][5]) //&jugador es pasado como r
     }
 }
 
-void mostrarMano(Jugador jugador, char tipo_carta[], string v_palos[])
+void mostrarMano(Jugador jugador, string tipo_carta[], string v_palos[])
 {
     cout << "Mano jugador: " << jugador.nombre << endl;
 
     for (int i = 0; i < 5; i++)
     {
-        if (jugador.mano[0][i] == 0)
-        {
-            cout << (int)tipo_carta[jugador.mano[0][i]] << v_palos[jugador.mano[1][i]] << endl; // Si un tipo de carta es 0 corresponde a '\n' que es =10 por ende necesito castear este elemento?
-        }
-        else
-        {
-            cout << tipo_carta[jugador.mano[0][i]] << v_palos[jugador.mano[1][i]] << endl;
-        }
+        // cout << jugador.mano[0][i] << endl;
+        cout << tipo_carta[jugador.mano[0][i]] << v_palos[jugador.mano[1][i]] << "  ";
     }
 }
 
-void primerTurno(Jugador jugador1, Jugador jugador2)
+void primerTurno(Jugador jugador1, Jugador jugador2, string tipo_carta[])
 {
-    int indice_carta = 0, cont1 = 0, cont2 = 0; // Indice carta corresponde a los indices de el vector tipo_carta
-    int comienza = 0;                           // Comienza almacena el numero del jugador al cual le toca jugar primero.
+    int indice_carta = 4;
+    bool maximo = false;
 
-    while (comienza == 0)
+    while (maximo == false)
     {
-        cont1 = contarCartas(jugador1, indice_carta);
-        cont2 = contarCartas(jugador2, indice_carta);
-        comienza = (cont1 > cont2) ? 1 : (cont2 > cont1) ? 2
-                                                         : 0;
-        cout << comienza << endl;
 
-        indice_carta++; // Si int comienza=0 , sigo buscando un maximo;
-    }
+        int cont1 = 0;
+        int cont2 = 0;
 
-    if (comienza == 1)
-    {
-        cout << "Comienza el jugador " << jugador1.nombre << endl;
-    }
-    else
-    {
-        cout << "Comienza el jugador " << jugador2.nombre << endl;
-    }
-}
-
-int contarCartas(Jugador jugador, int indice_carta)
-{
-    int cont = 0;
-    for (int i = 0; i < 5; i++)
-    {
-        if (jugador.mano[0][i] == 0)
+        for (int i = 0; i < 5; i++)
         {
+            if (jugador1.mano[0][i] == indice_carta)
+            {
+                cont1++;
+            }
 
-            cont++;
+            if (jugador2.mano[0][i] == indice_carta)
+            {
+                cont2++;
+            }
         }
-    }
 
-    return cont;
+        if (cont1 > cont2)
+        {
+            cout << "Comienza el jugador: " << jugador1.nombre << endl;
+            maximo = true;
+        }
+        else if (cont2 > cont1)
+        {
+            cout << "Comienza el jugador: " << jugador2.nombre << endl;
+            maximo = true;
+        }
+
+        indice_carta--;
+    }
 }
 
 int generarNumero(int n)
@@ -209,20 +206,13 @@ void mostrarCreditos()
 }
 
 // Funciones para probar codigo.
-void mostrarMazo(int mazo[][5], char tipo_carta[], string v_palos[])
+void mostrarMazo(int mazo[][5], string tipo_carta[], string v_palos[])
 {
     for (int i = 0; i < 4; i++)
     {
         for (int j = 0; j < 5; j++)
         {
-            if (tipo_carta[mazo[i][j]] == '\n')
-            {
-                cout << (int)tipo_carta[mazo[i][j]] << v_palos[i] << endl;
-            }
-            else
-            {
-                cout << tipo_carta[mazo[i][j]] << v_palos[i] << endl;
-            }
+            cout << tipo_carta[mazo[i][j]] << v_palos[i] << endl;
         }
     }
 }
