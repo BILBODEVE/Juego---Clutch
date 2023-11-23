@@ -22,8 +22,7 @@ void mezclarMazo(int mazo[][5]);
 void repartirCartas(Jugador &jugador, int mazo[][5]);
 void mostrarMano(Jugador jugador, char tipo_carta[], std::string v_palos[]); // std::string lo utilizo para no incluir espacios de nombre.
 int contarCartas(Jugador jugador, int indice_carta);
-int buscarMaximo(int cont1, int cont2);
-void primerTurno(bool max, Jugador jugador, Jugador, int cont1, int cont2);
+void primerTurno(Jugador jugador1, Jugador jugador2);
 
 // Estadistica
 void mostrarEstadisticas();

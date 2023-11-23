@@ -8,7 +8,6 @@ void JugarClutch(Jugador jugador1, Jugador jugador2, int mazo[][5], char tipo_ca
 {
     mensajeBienvenida();
     menuPrincipal(jugador1, jugador2, mazo, tipo_carta, v_palos);
-    jugar(jugador1, jugador2, mazo, tipo_carta, v_palos);
 }
 
 void mensajeBienvenida()
@@ -74,6 +73,7 @@ void jugar(Jugador jugador1, Jugador jugador2, int mazo[][5], char tipo_carta[],
     mezclarMazo(mazo);
     repartirCartas(jugador1, mazo);
     repartirCartas(jugador2, mazo);
+    primerTurno(jugador1, jugador2);
     mostrarMano(jugador1, tipo_carta, v_palos);
     mostrarMano(jugador2, tipo_carta, v_palos);
 }
@@ -151,58 +151,45 @@ void mostrarMano(Jugador jugador, char tipo_carta[], string v_palos[])
     }
 }
 
-void primerTurno(bool max, Jugador jugador1, Jugador jugador2, int cont1, int cont2)
+void primerTurno(Jugador jugador1, Jugador jugador2)
 {
-    int indice_carta = 0; // Indice carta corresponde a los indices de el vector tipo_carta
-    int comienza = 0;     // Comienza almacena el numero del jugador al cual le toca jugar primero.
+    int indice_carta = 0, cont1 = 0, cont2 = 0; // Indice carta corresponde a los indices de el vector tipo_carta
+    int comienza = 0;                           // Comienza almacena el numero del jugador al cual le toca jugar primero.
 
-    while (comienza == 0 && indice_carta < 5)
+    while (comienza == 0)
     {
         cont1 = contarCartas(jugador1, indice_carta);
         cont2 = contarCartas(jugador2, indice_carta);
-        comienza = buscarMaximo(cont1, cont2);
+        comienza = (cont1 > cont2) ? 1 : (cont2 > cont1) ? 2
+                                                         : 0;
+        cout << comienza << endl;
 
-        indice_carta++; // Si comienza sigue siendo =0 , sigo buscando un maximo;
+        indice_carta++; // Si int comienza=0 , sigo buscando un maximo;
     }
 
-    if (comienza)
+    if (comienza == 1)
     {
-        cout << "Comineza el jugador " << jugador1.nombre << endl;
+        cout << "Comienza el jugador " << jugador1.nombre << endl;
     }
     else
     {
-        cout << "Comineza el jugador " << jugador2.nombre << endl;
+        cout << "Comienza el jugador " << jugador2.nombre << endl;
     }
 }
 
 int contarCartas(Jugador jugador, int indice_carta)
 {
-    int cont;
+    int cont = 0;
     for (int i = 0; i < 5; i++)
     {
-        if (jugador.mano[indice_carta][indice_carta] == indice_carta)
+        if (jugador.mano[0][i] == 0)
         {
+
             cont++;
         }
     }
 
     return cont;
-}
-
-int buscarMaximo(int cont1, int cont2)
-{
-    if (cont1 > cont2)
-    {
-        return 0;
-    }
-    else if (cont2 > cont1)
-    {
-        return 1;
-    }
-    else
-    {
-        return 2;
-    }
 }
 
 int generarNumero(int n)
