@@ -17,6 +17,7 @@ void validarEleccion(int eleccion);
 
 // Funciones para desarrollar la partida.
 void jugar(Jugador jugador1, Jugador jugador2, int mazo[][5], std::string tipo_carta[], std::string v_palos[]);
+void datosJuego(Jugador jugador1, Jugador jugador2, int &ronda);
 void pedirNombres(Jugador &jugador1, Jugador &jugador2);
 void primerTurno(Jugador jugador1, Jugador jugador2, std::string tipo_carta[]);
 void mezclarMazo(int mazo[][5]);
@@ -29,3 +30,5 @@ void mostrarEstadisticas();
 
 // Creditos
 void mostrarCreditos();
+
+void setColor();

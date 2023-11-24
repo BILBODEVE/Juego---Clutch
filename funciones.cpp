@@ -1,6 +1,7 @@
 #include <iostream>
 #include "funciones.h"
 #include "estructuras.h"
+#include <windows.h>
 
 using namespace std;
 
@@ -69,6 +70,7 @@ void validarEleccion(int eleccion)
 
 void jugar(Jugador jugador1, Jugador jugador2, int mazo[][5], string tipo_carta[], string v_palos[])
 {
+    int ronda = 0;
     pedirNombres(jugador1, jugador2);
     mezclarMazo(mazo);
     repartirCartas(jugador1, mazo);
@@ -76,9 +78,16 @@ void jugar(Jugador jugador1, Jugador jugador2, int mazo[][5], string tipo_carta[
     cout << "---------------------------------------\n";
     primerTurno(jugador1, jugador2, tipo_carta);
     cout << "---------------------------------------\n";
+    datosJuego(jugador1, jugador2, ronda);
     mostrarMano(jugador1, tipo_carta, v_palos);
     cout << "\n\n";
     mostrarMano(jugador2, tipo_carta, v_palos);
+}
+
+void datosJuego(Jugador jugador1, Jugador jugador2, int &ronda)
+{
+    cout << "Ronda: " << ronda++ << endl;
+    cout << jugador1.nombre << " vs " << jugador2.nombre << endl;
 }
 
 void pedirNombres(Jugador &jugador1, Jugador &jugador2)
@@ -140,6 +149,7 @@ void repartirCartas(Jugador &jugador, int mazo[][5]) //&jugador es pasado como r
 
     validarMano(jugador, mazo);
 }
+
 void validarMano(Jugador jugador, int mazo[][5])
 {
     int cont = 0;
@@ -161,11 +171,16 @@ void validarMano(Jugador jugador, int mazo[][5])
 void mostrarMano(Jugador jugador, string tipo_carta[], string v_palos[])
 {
     cout << "Mano jugador: " << jugador.nombre << endl;
-
     for (int i = 0; i < 5; i++)
     {
-        // cout << jugador.mano[0][i] << endl;
-        cout << tipo_carta[jugador.mano[0][i]] << v_palos[jugador.mano[1][i]] << "  ";
+        if (jugador.mano[i][i] == 0)
+        {
+            cout << tipo_carta[jugador.mano[0][i]] << v_palos[jugador.mano[1][i]] << "  ";
+        }
+        else
+        {
+            cout << tipo_carta[jugador.mano[0][i]] << v_palos[jugador.mano[1][i]] << "  ";
+        }
     }
 }
 
