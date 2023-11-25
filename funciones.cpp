@@ -228,6 +228,12 @@ int generarIndices(int n)
     return valor;
 }
 
+int tirarDado()
+{
+    int dado = rand() % 5 + 1;
+    return dado;
+}
+
 void mostrarEstadisticas()
 {
     cout << "hola" << endl;
