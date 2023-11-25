@@ -5,7 +5,7 @@ void JugarClutch(Jugador jugador1, Jugador jugador2, int mazo[][5], std::string 
 
 // Funciones globales.
 int generarIndices(int);
-int tirarDado();
+int generarValorDado();
 
 void mostrarMazo(int mazo[][5], std::string tipo_carta[], std::string v_palos[]); // std::string lo utilizo para no incluir espacios de nombre.
 
@@ -26,6 +26,9 @@ void mezclarMazo(int mazo[][5]);
 void repartirCartas(Jugador &jugador, int mazo[][5]);
 void validarMano(Jugador jugador, int mazo[][5]);
 void mostrarMano(Jugador jugador, std::string tipo_carta[], std::string v_palos[]); // std::string lo utilizo para no incluir espacios de nombre.
+void tirarDado(Jugador jugador1, Jugador jugador2);
+void robarDelMazo(int &iCarta, int &iPalo);
+void intercambiarCarta(Jugador &jugador);
 
 // Estadistica
 void mostrarEstadisticas();

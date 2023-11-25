@@ -1,8 +1,18 @@
 #include <iostream>
 #include "funciones.h"
-#include "estructuras.h"
 
 using namespace std;
+
+string tipo_carta[5] = {"10", "J", "Q", "K", "A"};            // En ASCII '\n' equivale a 10.
+string v_palos[4] = {"\u2665", "\u2663", "\u2660", "\u2666"}; // corazon,trebol,pica,diamante.
+
+int mazo[4][5] = {
+    0, 1, 2, 3, 4,
+    0, 1, 2, 3, 4,
+    0, 1, 2, 3, 4,
+    0, 1, 2, 3, 4};
+int iCarta;
+int iPalo;
 
 void JugarClutch(Jugador jugador1, Jugador jugador2, int mazo[][5], std::string tipo_carta[], string v_palos[])
 {
@@ -43,7 +53,6 @@ int mostrarMenu()
 {
     int opcion;
     cout << "Eliga una opcion: \n";
-
     cout << "CLUTCH \n";
     cout << "--------------------\n";
     cout << "1 - JUGAR \n";
@@ -81,6 +90,7 @@ void jugar(Jugador jugador1, Jugador jugador2, int mazo[][5], string tipo_carta[
     mostrarMano(jugador1, tipo_carta, v_palos);
     cout << "\n\n";
     mostrarMano(jugador2, tipo_carta, v_palos);
+    tirarDado(jugador1, jugador2);
 }
 
 void datosJuego(Jugador jugador1, Jugador jugador2, int &ronda)
@@ -132,18 +142,18 @@ void repartirCartas(Jugador &jugador, int mazo[][5]) //&jugador es pasado como r
     for (int i = 0; i < 5; i++)
     {
         // Genero un numero aleatorio correspondiente a la fila y columna de mazo[][].
-        int carta = generarIndices(4);
-        int palo = generarIndices(3);
+        iCarta = generarIndices(4);
+        iPalo = generarIndices(3);
 
-        while (mazo[palo][carta] == -1) // Si elemento = -1 quiere decir que esa carta junto con su palo ya fue entregada. Entonces se genera un nuevo indice.
+        while (mazo[iPalo][iCarta] == -1) // Si elemento = -1 quiere decir que esa carta junto con su palo ya fue entregada. Entonces se genera un nuevo indice.
         {
-            carta = generarIndices(4);
-            palo = generarIndices(3);
+            iCarta = generarIndices(4);
+            iPalo = generarIndices(3);
         }
 
-        jugador.mano[0][i] = mazo[palo][carta];
-        jugador.mano[1][i] = palo;
-        mazo[palo][carta] = -1; // Una vez asignado el elemento lo quito del mazo dando valor -1.
+        jugador.mano[0][i] = mazo[iPalo][iCarta];
+        jugador.mano[1][i] = iPalo;
+        mazo[iPalo][iCarta] = -1; // Una vez asignado el elemento lo quito del mazo dando valor -1.
     }
 
     validarMano(jugador, mazo);
@@ -228,10 +238,66 @@ int generarIndices(int n)
     return valor;
 }
 
-int tirarDado()
+int generarValorDado()
 {
     int dado = rand() % 5 + 1;
     return dado;
+}
+
+void tirarDado(Jugador jugador1, Jugador jugador2)
+{
+
+    cout << "\nPresione enter para tirar el dado: \n";
+
+    int valor_dado = 1;
+
+    switch (valor_dado)
+    {
+    case 1:
+        intercambiarCarta(jugador1);
+        break;
+    case 2:
+        break;
+    case 3:
+        break;
+    case 4:
+        break;
+    case 5:
+        break;
+    case 6:
+        break;
+    }
+
+    mostrarMano(jugador1, tipo_carta, v_palos);
+    mostrarMano(jugador2, tipo_carta, v_palos);
+}
+
+void robarDelMazo(int &iCarta, int &iPalo)
+{
+    iCarta = generarIndices(4);
+    iPalo = generarIndices(3);
+
+    while (mazo[iPalo][iCarta] == -1)
+    {
+        iCarta = generarIndices(4);
+        iPalo = generarIndices(3);
+    }
+
+    mazo[iPalo][iCarta] = -1;
+}
+
+void intercambiarCarta(Jugador &jugador)
+{
+    int indice_carta_mano;
+    cout << "Ingrese la carta que desea intercambiar: ";
+    cin >> indice_carta_mano;
+    indice_carta_mano - 1;
+
+    robarDelMazo(iCarta, iPalo);
+
+    mazo[jugador.mano[1][indice_carta_mano]][jugador.mano[0][indice_carta_mano]] = jugador.mano[0][indice_carta_mano];
+    jugador.mano[0][indice_carta_mano] = iCarta;
+    jugador.mano[1][indice_carta_mano] = iPalo;
 }
 
 void mostrarEstadisticas()
