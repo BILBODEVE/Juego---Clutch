@@ -1,10 +1,7 @@
 #include <iostream>
 #include "funciones.h"
 #include "estructuras.h"
-<<<<<<< HEAD
 #include <windows.h>
-=======
->>>>>>> 1c755b6651aeebc8ac1fde62e1febbb6e30134b5
 
 using namespace std;
 
@@ -81,7 +78,6 @@ void jugar(Jugador jugador1, Jugador jugador2, int mazo[][5], string tipo_carta[
     cout << "---------------------------------------\n";
     primerTurno(jugador1, jugador2, tipo_carta);
     cout << "---------------------------------------\n";
-<<<<<<< HEAD
     datosJuego(jugador1, jugador2, ronda);
     mostrarMano(jugador1, tipo_carta, v_palos);
     cout << "\n\n";
@@ -91,23 +87,6 @@ void jugar(Jugador jugador1, Jugador jugador2, int mazo[][5], string tipo_carta[
 void datosJuego(Jugador jugador1, Jugador jugador2, int &ronda)
 {
     cout << "Ronda: " << ronda++ << endl;
-=======
-    while (ronda < 100)
-    {
-        ronda++;
-        datosJuego(jugador1, jugador2, ronda);
-        mostrarMano(jugador1, tipo_carta, v_palos);
-        cout << "\n\n";
-        mostrarMano(jugador2, tipo_carta, v_palos);
-        int valorDado = generarNumAleatorio(6, 1); // Valor del dado
-        cout << "#Valor del dado: " << valorDado << endl;
-    }
-}
-
-void datosJuego(Jugador jugador1, Jugador jugador2, int ronda)
-{
-    cout << "Ronda: " << ronda << endl;
->>>>>>> 1c755b6651aeebc8ac1fde62e1febbb6e30134b5
     cout << jugador1.nombre << " vs " << jugador2.nombre << endl;
 }
 
@@ -140,11 +119,7 @@ void mezclarMazo(int mazo[][5])
     {
         for (int j = 0; j < 5; j++)
         {
-<<<<<<< HEAD
             carta = generarNumero(4); // Genera un indice aleatorio correspondiente a la columna de mazo[][].
-=======
-            carta = generarNumAleatorio(4, 0); // Genera un indice aleatorio correspondiente a la columna de mazo[][].
->>>>>>> 1c755b6651aeebc8ac1fde62e1febbb6e30134b5
             auxiliar = mazo[i][j];
             mazo[i][j] = mazo[i][carta];
             mazo[i][carta] = auxiliar;
@@ -158,7 +133,6 @@ void repartirCartas(Jugador &jugador, int mazo[][5]) //&jugador es pasado como r
     for (int i = 0; i < 5; i++)
     {
         // Genero un numero aleatorio correspondiente a la fila y columna de mazo[][].
-<<<<<<< HEAD
         int carta = generarNumero(4);
         int palo = generarNumero(3);
 
@@ -166,15 +140,6 @@ void repartirCartas(Jugador &jugador, int mazo[][5]) //&jugador es pasado como r
         {
             carta = generarNumero(4);
             palo = generarNumero(3);
-=======
-        int carta = generarNumAleatorio(4, 0);
-        int palo = generarNumAleatorio(3, 0);
-
-        while (mazo[palo][carta] == -1) // Si elemento = -1 quiere decir que esa carta junto con su palo ya fue entregada. Entonces se genera un nuevo indice.
-        {
-            carta = generarNumAleatorio(4, 0);
-            palo = generarNumAleatorio(3, 0);
->>>>>>> 1c755b6651aeebc8ac1fde62e1febbb6e30134b5
         }
 
         jugador.mano[0][i] = mazo[palo][carta];
@@ -182,17 +147,10 @@ void repartirCartas(Jugador &jugador, int mazo[][5]) //&jugador es pasado como r
         mazo[palo][carta] = -1; // Una vez asignado el elemento lo quito del mazo dando valor -1.
     }
 
-<<<<<<< HEAD
     validarMano(jugador, mazo);
 }
 
 void validarMano(Jugador jugador, int mazo[][5])
-=======
-    // validarMano(jugador, mazo);
-}
-
-void validarMano(Jugador jugador, int mazo[][5], int ronda)
->>>>>>> 1c755b6651aeebc8ac1fde62e1febbb6e30134b5
 {
     int cont = 0;
 
@@ -206,18 +164,7 @@ void validarMano(Jugador jugador, int mazo[][5], int ronda)
 
     if (cont == 4)
     {
-<<<<<<< HEAD
         repartirCartas(jugador, mazo);
-=======
-        if (ronda == 1)
-        {
-            repartirCartas(jugador, mazo);
-        }
-        else
-        {
-            // mostrar ganador
-        }
->>>>>>> 1c755b6651aeebc8ac1fde62e1febbb6e30134b5
     }
 }
 
@@ -276,67 +223,12 @@ void primerTurno(Jugador jugador1, Jugador jugador2, string tipo_carta[])
     }
 }
 
-<<<<<<< HEAD
 int generarNumero(int n)
 {
     int valor = rand() % n;
     return valor;
 }
 
-=======
-void valorDado(int valorDado)
-{
-    switch (valorDado)
-    {
-    case 1:
-        break;
-    case 2:
-        break;
-    case 3:
-        break;
-    case 4:
-        break;
-    case 5:
-        break;
-    case 6:
-        break;
-    default:
-        break;
-    }
-}
-
-int generarNumAleatorio(int n, int m)
-{
-    int valor = rand() % n + m;
-    return valor;
-}
-
-void robarMazo(int mazo[][5], int &iCarta, int &iPalo)
-{
-    iCarta = generarNumAleatorio(4, 0);
-    iPalo = generarNumAleatorio(3, 0);
-
-    while (mazo[iPalo][iCarta] == -1)
-    {
-        int iCarta = generarNumAleatorio(4, 0);
-    }
-
-    mazo[iPalo][iCarta] = -1;
-}
-
-void accion1(Jugador &jugador, int mazo[][5], string tipo_carta[], string v_palos[], int iCarta, int iPalo)
-{
-    int cartaElegida;
-    cout << "Ingrese la carta que desea intercambiar: ";
-    cin >> cartaElegida;
-    cout << "Presione enter para robar una carta del mazo: ";
-    cout << "Su nueva carta es: " << tipo_carta[iCarta] << v_palos[iPalo];
-    mazo[jugador.mano[1][cartaElegida - 1]][jugador.mano[0][cartaElegida - 1]] = jugador.mano[0][cartaElegida - 1];
-    jugador.mano[0][cartaElegida - 1] = iCarta;
-    jugador.mano[1][cartaElegida - 1] = iPalo;
-}
-
->>>>>>> 1c755b6651aeebc8ac1fde62e1febbb6e30134b5
 void mostrarEstadisticas()
 {
     cout << "hola" << endl;
@@ -346,10 +238,7 @@ void mostrarCreditos()
 {
     cout << "Hola" << endl;
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> 1c755b6651aeebc8ac1fde62e1febbb6e30134b5
 // Funciones para probar codigo.
 void mostrarMazo(int mazo[][5], string tipo_carta[], string v_palos[])
 {
