@@ -1,7 +1,6 @@
 #include <iostream>
 #include "funciones.h"
 #include "estructuras.h"
-#include <windows.h>
 
 using namespace std;
 
