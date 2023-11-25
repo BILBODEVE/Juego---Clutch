@@ -4,7 +4,8 @@
 void JugarClutch(Jugador jugador1, Jugador jugador2, int mazo[][5], std::string tipo_carta[], std::string v_palos[]);
 
 // Funciones globales.
-int generarNumero(int);
+int generarIndices(int);
+
 void mostrarMazo(int mazo[][5], std::string tipo_carta[], std::string v_palos[]); // std::string lo utilizo para no incluir espacios de nombre.
 
 // Bienvenida.

@@ -32,9 +32,9 @@ void menuPrincipal(Jugador jugador1, Jugador jugador2, int mazo[][5], std::strin
         mostrarCreditos();
         break;
     case 0:
-        break;
+        break; //   Corto la ejecucion del programa.
     default:
-        validarEleccion(eleccion); //   Corto la ejecucion del programa.
+        validarEleccion(eleccion);
         cout << endl;
     }
 }
@@ -118,7 +118,7 @@ void mezclarMazo(int mazo[][5])
     {
         for (int j = 0; j < 5; j++)
         {
-            carta = generarNumero(4); // Genera un indice aleatorio correspondiente a la columna de mazo[][].
+            carta = generarIndices(4); // Genera un indice aleatorio correspondiente a la columna de mazo[][].
             auxiliar = mazo[i][j];
             mazo[i][j] = mazo[i][carta];
             mazo[i][carta] = auxiliar;
@@ -132,13 +132,13 @@ void repartirCartas(Jugador &jugador, int mazo[][5]) //&jugador es pasado como r
     for (int i = 0; i < 5; i++)
     {
         // Genero un numero aleatorio correspondiente a la fila y columna de mazo[][].
-        int carta = generarNumero(4);
-        int palo = generarNumero(3);
+        int carta = generarIndices(4);
+        int palo = generarIndices(3);
 
         while (mazo[palo][carta] == -1) // Si elemento = -1 quiere decir que esa carta junto con su palo ya fue entregada. Entonces se genera un nuevo indice.
         {
-            carta = generarNumero(4);
-            palo = generarNumero(3);
+            carta = generarIndices(4);
+            palo = generarIndices(3);
         }
 
         jugador.mano[0][i] = mazo[palo][carta];
@@ -222,7 +222,7 @@ void primerTurno(Jugador jugador1, Jugador jugador2, string tipo_carta[])
     }
 }
 
-int generarNumero(int n)
+int generarIndices(int n)
 {
     int valor = rand() % n;
     return valor;
