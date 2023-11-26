@@ -1,4 +1,5 @@
 #include <iostream>
+#include <conio.h>
 #include "funciones.h"
 
 using namespace std;
@@ -88,7 +89,6 @@ void jugar(Jugador jugador1, Jugador jugador2, int mazo[][5], string tipo_carta[
     cout << "---------------------------------------\n";
     datosJuego(jugador1, jugador2, ronda);
     mostrarMano(jugador1, tipo_carta, v_palos);
-    cout << "\n\n";
     mostrarMano(jugador2, tipo_carta, v_palos);
     tirarDado(jugador1, jugador2);
 }
@@ -97,6 +97,7 @@ void datosJuego(Jugador jugador1, Jugador jugador2, int &ronda)
 {
     cout << "Ronda: " << ronda++ << endl;
     cout << jugador1.nombre << " vs " << jugador2.nombre << endl;
+    cout << endl;
 }
 
 void pedirNombres(Jugador &jugador1, Jugador &jugador2)
@@ -191,6 +192,8 @@ void mostrarMano(Jugador jugador, string tipo_carta[], string v_palos[])
             cout << tipo_carta[jugador.mano[0][i]] << v_palos[jugador.mano[1][i]] << "  ";
         }
     }
+
+    cout << endl;
 }
 
 void primerTurno(Jugador jugador1, Jugador jugador2, string tipo_carta[])
@@ -247,26 +250,36 @@ int generarValorDado()
 void tirarDado(Jugador jugador1, Jugador jugador2)
 {
 
-    cout << "\nPresione enter para tirar el dado: \n";
-
+    cout << "\nPresione enter para tirar el dado: " << getche() << endl;
     int valor_dado = 1;
+
+    cout << "Valor del dado: #" << valor_dado << endl;
 
     switch (valor_dado)
     {
     case 1:
+        cout << "#1 Elegir una carta de su propio corral(1-5) y robar una carta del mazo.Se intercambian las dos.La carta robada pasa a formar parte del corral y la carta seleccionada se incorpora al mazo\n\n";
+
         intercambiarCarta(jugador1);
         break;
     case 2:
+        cout << "Elegir una carta del corral del contrario(1-5) y robar una carta del mazo.Se intercambian las dos.La carta robada pasa a formar parte del corral del contrario y la carta seleccionada se incorpora al mazo.";
         break;
     case 3:
+        cout << "Elegir una carta del corral propio (1-5) e intercambiarla por una carta del corral del contrario(1 - 5).Las cartas seleccionadas se intercambian.";
         break;
     case 4:
+        cout << "Intercambiar dos cartas del propio corral. Se eligen dos cartas del propio corral(1 - 5) y se intercambian entre sí.";
         break;
     case 5:
+        cout << "Bloquear una carta del corral. La carta bloqueada no puede ser elegida por el contrario para intercambio(acciones 2 y 3) pero sí puede ser elegida por uno mismo.";
         break;
     case 6:
+        cout << "Elegir cualquiera de las acciones anteriores o bien pasar el turno.";
         break;
     }
+
+    cout << endl;
 
     mostrarMano(jugador1, tipo_carta, v_palos);
     mostrarMano(jugador2, tipo_carta, v_palos);
@@ -289,9 +302,10 @@ void robarDelMazo(int &iCarta, int &iPalo)
 void intercambiarCarta(Jugador &jugador)
 {
     int indice_carta_mano;
-    cout << "Ingrese la carta que desea intercambiar: ";
+    cout << "#Ingrese la carta que desea intercambiar: ";
     cin >> indice_carta_mano;
-    indice_carta_mano - 1;
+    indice_carta_mano -= -1;
+    cout << "#Presione enter para robar del mazo: " << getche() << endl;
 
     robarDelMazo(iCarta, iPalo);
 
