@@ -4,21 +4,18 @@
 
 using namespace std;
 
-string tipo_carta[5] = {"10", "J", "Q", "K", "A"};            // En ASCII '\n' equivale a 10.
-string v_palos[4] = {"\u2665", "\u2663", "\u2660", "\u2666"}; // corazon,trebol,pica,diamante.
+// En ASCII '\n' equivale a 10.
+string tipo_carta[5] = {"10", "J", "Q", "K", "A"};
+// corazon,trebol,pica,diamante.
 
-int mazo[4][5] = {
-    0, 1, 2, 3, 4,
-    0, 1, 2, 3, 4,
-    0, 1, 2, 3, 4,
-    0, 1, 2, 3, 4};
+string v_palos[4] = {"\u2665", "\u2663", "\u2660", "\u2666"};
+Mazo mazo[20];
 int iCarta;
-int iPalo;
 
-void JugarClutch(Jugador jugador1, Jugador jugador2, int mazo[][5], std::string tipo_carta[], string v_palos[])
+void JugarClutch(Jugador jugador1, Jugador jugador2)
 {
     mensajeBienvenida();
-    menuPrincipal(jugador1, jugador2, mazo, tipo_carta, v_palos);
+    menuPrincipal(jugador1, jugador2, mazo);
 }
 
 void mensajeBienvenida()
@@ -26,7 +23,7 @@ void mensajeBienvenida()
     cout << "Bienvenido a CLUTCH.\n\n";
 }
 
-void menuPrincipal(Jugador jugador1, Jugador jugador2, int mazo[][5], std::string tipo_carta[], string v_palos[])
+void menuPrincipal(Jugador jugador1, Jugador jugador2, Mazo mazo[20])
 {
     int eleccion;
     eleccion = mostrarMenu();
@@ -34,7 +31,7 @@ void menuPrincipal(Jugador jugador1, Jugador jugador2, int mazo[][5], std::strin
     switch (eleccion)
     {
     case 1:
-        jugar(jugador1, jugador2, mazo, tipo_carta, v_palos);
+        jugar(jugador1, jugador2, mazo);
         break;
     case 2:
         mostrarEstadisticas();
@@ -77,20 +74,23 @@ void validarEleccion(int eleccion)
     }
 }
 
-void jugar(Jugador jugador1, Jugador jugador2, int mazo[][5], string tipo_carta[], string v_palos[])
+void jugar(Jugador jugador1, Jugador jugador2, Mazo mazo[20])
 {
+    cargarMazo(mazo);
+    mostrarMazo(mazo);
     int ronda = 0;
     pedirNombres(jugador1, jugador2);
     mezclarMazo(mazo);
-    repartirCartas(jugador1, mazo);
-    repartirCartas(jugador2, mazo);
-    cout << "---------------------------------------\n";
-    primerTurno(jugador1, jugador2, tipo_carta);
-    cout << "---------------------------------------\n";
+    repartirCartas(jugador1);
+    repartirCartas(jugador2);
+    mostrarMazo(mazo);
     datosJuego(jugador1, jugador2, ronda);
-    mostrarMano(jugador1, tipo_carta, v_palos);
-    mostrarMano(jugador2, tipo_carta, v_palos);
-    tirarDado(jugador1, jugador2);
+    mostrarMano(jugador1);
+    mostrarMano(jugador2);
+    cout << "---------------------------------------\n";
+    primerTurno(jugador1, jugador2);
+    cout << "---------------------------------------\n";
+    mostrarMazo(mazo);
 }
 
 void datosJuego(Jugador jugador1, Jugador jugador2, int &ronda)
@@ -120,83 +120,99 @@ void pedirNombres(Jugador &jugador1, Jugador &jugador2)
     }
 }
 
-void mezclarMazo(int mazo[][5])
+void cargarMazo(Mazo mazo[20])
 {
-    // Las cartas se mezclan por fila.
-    int auxiliar;
-    int carta;
-    for (int i = 0; i < 4; i++)
+
+    for (int j = 0; j < 20; j++)
     {
-        for (int j = 0; j < 5; j++)
-        {
-            carta = generarIndices(4); // Genera un indice aleatorio correspondiente a la columna de mazo[][].
-            auxiliar = mazo[i][j];
-            mazo[i][j] = mazo[i][carta];
-            mazo[i][carta] = auxiliar;
-        }
+        mazo[j].carta = tipo_carta[j % 5];
+    }
+
+    for (int j = 0; j < 20; j++)
+    {
+        mazo[j].palo = v_palos[j % 4];
     }
 }
 
-void repartirCartas(Jugador &jugador, int mazo[][5]) //&jugador es pasado como referencia para modificar el valor original de la matriz
+void mezclarMazo(Mazo mazo[20])
 {
-
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 20; i++)
     {
-        // Genero un numero aleatorio correspondiente a la fila y columna de mazo[][].
-        iCarta = generarIndices(4);
-        iPalo = generarIndices(3);
+        int iCarta = rand() % CANT_CARTAS;
+        string auxCarta;
+        string auxPalo;
 
-        while (mazo[iPalo][iCarta] == -1) // Si elemento = -1 quiere decir que esa carta junto con su palo ya fue entregada. Entonces se genera un nuevo indice.
-        {
-            iCarta = generarIndices(4);
-            iPalo = generarIndices(3);
-        }
+        auxCarta = mazo[i].carta;
+        auxPalo = mazo[i].palo;
 
-        jugador.mano[0][i] = mazo[iPalo][iCarta];
-        jugador.mano[1][i] = iPalo;
-        mazo[iPalo][iCarta] = -1; // Una vez asignado el elemento lo quito del mazo dando valor -1.
-    }
+        mazo[i].carta = mazo[iCarta].carta;
+        mazo[i].palo = mazo[iCarta].palo;
 
-    validarMano(jugador, mazo);
-}
-
-void validarMano(Jugador jugador, int mazo[][5])
-{
-    int cont = 0;
-
-    for (int i = 0; i < 4; i++) // El contador va hasta el indice 3 ya que a partir del indice 4 no existen mas elementos dentro del array.
-    {
-        if (jugador.mano[0][i] + 1 == jugador.mano[0][i + 1])
-        {
-            cont++;
-        }
-    }
-
-    if (cont == 4)
-    {
-        repartirCartas(jugador, mazo);
+        mazo[iCarta].carta = auxCarta;
+        mazo[iCarta].palo = auxPalo;
     }
 }
 
-void mostrarMano(Jugador jugador, string tipo_carta[], string v_palos[])
+void mostrarMazo(Mazo mazo[20])
 {
-    cout << "Mano jugador: " << jugador.nombre << endl;
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 20; i++)
     {
-        if (jugador.mano[i][i] == 0)
-        {
-            cout << tipo_carta[jugador.mano[0][i]] << v_palos[jugador.mano[1][i]] << "  ";
-        }
-        else
-        {
-            cout << tipo_carta[jugador.mano[0][i]] << v_palos[jugador.mano[1][i]] << "  ";
-        }
+        cout << mazo[i].carta << mazo[i].palo << endl;
     }
 
     cout << endl;
 }
 
-void primerTurno(Jugador jugador1, Jugador jugador2, string tipo_carta[])
+void repartirCartas(Jugador &jugador) //&jugador es pasado como referencia para modificar el valor original de la matriz
+{
+    for (int i = 0; i < 5; i++)
+    {
+        int iCarta = rand() % CANT_CARTAS;
+
+        while (mazo[iCarta].carta == "0")
+        {
+            iCarta = rand() % CANT_CARTAS;
+        }
+
+        jugador.mano[i].carta = mazo[iCarta].carta;
+        jugador.mano[i].palo = mazo[iCarta].palo;
+
+        mazo[iCarta].carta = "0";
+        mazo[iCarta].palo = "0";
+    }
+    validarMano(jugador, mazo);
+}
+
+void validarMano(Jugador jugador, Mazo mazo[20])
+{
+    int cont = 0;
+
+    for (int i = 0; i < 4; i++)
+    {
+        if (jugador.mano[i].carta == jugador.mano[i + 1].carta)
+        {
+            cont++;
+        }
+    }
+    if (cont == 4)
+    {
+        repartirCartas(jugador);
+    }
+}
+
+void mostrarMano(Jugador jugador)
+{
+    cout << "Mano jugador: " << jugador.nombre << endl;
+
+    for (int i = 0; i < 5; i++)
+    {
+        cout << jugador.mano[i].carta << jugador.mano[i].palo << endl;
+    }
+
+    cout << endl;
+}
+
+void primerTurno(Jugador jugador1, Jugador jugador2)
 {
     int indice_carta = 4;
     bool maximo = false;
@@ -209,12 +225,12 @@ void primerTurno(Jugador jugador1, Jugador jugador2, string tipo_carta[])
 
         for (int i = 0; i < 5; i++)
         {
-            if (jugador1.mano[0][i] == indice_carta)
+            if (jugador1.mano[i].carta == tipo_carta[indice_carta])
             {
                 cont1++;
             }
 
-            if (jugador2.mano[0][i] == indice_carta)
+            if (jugador2.mano[i].carta == tipo_carta[indice_carta])
             {
                 cont2++;
             }
@@ -224,21 +240,20 @@ void primerTurno(Jugador jugador1, Jugador jugador2, string tipo_carta[])
         {
             cout << "Comienza el jugador: " << jugador1.nombre << endl;
             maximo = true;
+            tirarDado(jugador1);
         }
         else if (cont2 > cont1)
         {
             cout << "Comienza el jugador: " << jugador2.nombre << endl;
             maximo = true;
+            tirarDado(jugador2);
         }
 
         indice_carta--;
     }
-}
 
-int generarIndices(int n)
-{
-    int valor = rand() % n;
-    return valor;
+    mostrarMano(jugador1);
+    mostrarMano(jugador2);
 }
 
 int generarValorDado()
@@ -247,9 +262,15 @@ int generarValorDado()
     return dado;
 }
 
-void tirarDado(Jugador jugador1, Jugador jugador2)
+int generarIndice()
 {
+    int indice = rand() % CANT_CARTAS;
 
+    return indice;
+}
+
+void tirarDado(Jugador &jugador)
+{
     cout << "\nPresione enter para tirar el dado: " << getche() << endl;
     int valor_dado = 1;
 
@@ -260,7 +281,7 @@ void tirarDado(Jugador jugador1, Jugador jugador2)
     case 1:
         cout << "#1 Elegir una carta de su propio corral(1-5) y robar una carta del mazo.Se intercambian las dos.La carta robada pasa a formar parte del corral y la carta seleccionada se incorpora al mazo\n\n";
 
-        intercambiarCarta(jugador1);
+        intercambiarCarta(jugador);
         break;
     case 2:
         cout << "Elegir una carta del corral del contrario(1-5) y robar una carta del mazo.Se intercambian las dos.La carta robada pasa a formar parte del corral del contrario y la carta seleccionada se incorpora al mazo.";
@@ -280,38 +301,48 @@ void tirarDado(Jugador jugador1, Jugador jugador2)
     }
 
     cout << endl;
-
-    mostrarMano(jugador1, tipo_carta, v_palos);
-    mostrarMano(jugador2, tipo_carta, v_palos);
 }
 
-void robarDelMazo(int &iCarta, int &iPalo)
+int robarDelMazo()
 {
-    iCarta = generarIndices(4);
-    iPalo = generarIndices(3);
+    iCarta = generarIndice();
 
-    while (mazo[iPalo][iCarta] == -1)
+    while (mazo[iCarta].carta == "0")
     {
-        iCarta = generarIndices(4);
-        iPalo = generarIndices(3);
+        iCarta = generarIndice();
     }
 
-    mazo[iPalo][iCarta] = -1;
+    return iCarta;
 }
 
 void intercambiarCarta(Jugador &jugador)
 {
-    int indice_carta_mano;
+    string auxCarta, auxPalo;
+    int cartaElegida;
+
     cout << "#Ingrese la carta que desea intercambiar: ";
-    cin >> indice_carta_mano;
-    indice_carta_mano -= -1;
+    cin >> cartaElegida;
+    cartaElegida = cartaElegida - 1;
     cout << "#Presione enter para robar del mazo: " << getche() << endl;
 
-    robarDelMazo(iCarta, iPalo);
+    int cartaRobada = robarDelMazo();
 
-    mazo[jugador.mano[1][indice_carta_mano]][jugador.mano[0][indice_carta_mano]] = jugador.mano[0][indice_carta_mano];
-    jugador.mano[0][indice_carta_mano] = iCarta;
-    jugador.mano[1][indice_carta_mano] = iPalo;
+    auxCarta = jugador.mano[cartaElegida].carta;
+    auxPalo = jugador.mano[cartaElegida].palo;
+
+    jugador.mano[cartaElegida].carta = mazo[cartaRobada].carta;
+    jugador.mano[cartaElegida].palo = mazo[cartaRobada].palo;
+
+    for (int i = 0; i < 20; i++)
+    {
+        if (mazo[i].carta == "0")
+        {
+            mazo[i].carta = auxCarta;
+            mazo[i].palo = auxPalo;
+
+            i = 20;
+        }
+    }
 }
 
 void mostrarEstadisticas()
@@ -325,13 +356,3 @@ void mostrarCreditos()
 }
 
 // Funciones para probar codigo.
-void mostrarMazo(int mazo[][5], string tipo_carta[], string v_palos[])
-{
-    for (int i = 0; i < 4; i++)
-    {
-        for (int j = 0; j < 5; j++)
-        {
-            cout << tipo_carta[mazo[i][j]] << v_palos[i] << endl;
-        }
-    }
-}
