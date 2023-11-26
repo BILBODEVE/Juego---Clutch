@@ -11,6 +11,8 @@ string tipo_carta[5] = {"10", "J", "Q", "K", "A"};
 string v_palos[4] = {"\u2665", "\u2663", "\u2660", "\u2666"};
 Mazo mazo[20];
 int iCarta;
+int ronda = 0;
+bool estado = false;
 
 void JugarClutch(Jugador jugador1, Jugador jugador2)
 {
@@ -21,6 +23,24 @@ void JugarClutch(Jugador jugador1, Jugador jugador2)
 void mensajeBienvenida()
 {
     cout << "Bienvenido a CLUTCH.\n\n";
+}
+
+int mostrarMenu()
+{
+    int opcion;
+    cout << "Eliga una opcion: \n";
+    cout << "CLUTCH \n";
+    cout << "--------------------\n";
+    cout << "1 - JUGAR \n";
+    cout << "2 - ESTADISTICAS\n";
+    cout << "3 - CREDITOS\n";
+    cout << "--------------------\n";
+    cout << "0 - SALIR\n";
+    cout << "Ingrese la opcion elegida: ";
+    cin >> opcion;
+    cout << endl;
+
+    return opcion;
 }
 
 void menuPrincipal(Jugador jugador1, Jugador jugador2, Mazo mazo[20])
@@ -47,24 +67,6 @@ void menuPrincipal(Jugador jugador1, Jugador jugador2, Mazo mazo[20])
     }
 }
 
-int mostrarMenu()
-{
-    int opcion;
-    cout << "Eliga una opcion: \n";
-    cout << "CLUTCH \n";
-    cout << "--------------------\n";
-    cout << "1 - JUGAR \n";
-    cout << "2 - ESTADISTICAS\n";
-    cout << "3 - CREDITOS\n";
-    cout << "--------------------\n";
-    cout << "0 - SALIR\n";
-    cout << "Ingrese la opcion elegida: ";
-    cin >> opcion;
-    cout << endl;
-
-    return opcion;
-}
-
 void validarEleccion(int eleccion)
 {
     while (eleccion < 0 || eleccion > 3)
@@ -77,20 +79,21 @@ void validarEleccion(int eleccion)
 void jugar(Jugador jugador1, Jugador jugador2, Mazo mazo[20])
 {
     cargarMazo(mazo);
-    mostrarMazo(mazo);
-    int ronda = 0;
     pedirNombres(jugador1, jugador2);
     mezclarMazo(mazo);
     repartirCartas(jugador1);
     repartirCartas(jugador2);
-    mostrarMazo(mazo);
-    datosJuego(jugador1, jugador2, ronda);
-    mostrarMano(jugador1);
-    mostrarMano(jugador2);
-    cout << "---------------------------------------\n";
-    primerTurno(jugador1, jugador2);
-    cout << "---------------------------------------\n";
-    mostrarMazo(mazo);
+    while (estado == false)
+    {
+        datosJuego(jugador1, jugador2, ronda);
+        mostrarMano(jugador1);
+        mostrarMano(jugador2);
+        cout << "---------------------------------------\n";
+        primerTurno(jugador1, jugador2);
+        cout << "---------------------------------------\n";
+        buscarGanador(jugador1, jugador2, estado);
+        mezclarMazo(mazo);
+    }
 }
 
 void datosJuego(Jugador jugador1, Jugador jugador2, int &ronda)
@@ -180,10 +183,10 @@ void repartirCartas(Jugador &jugador) //&jugador es pasado como referencia para 
         mazo[iCarta].carta = "0";
         mazo[iCarta].palo = "0";
     }
-    validarMano(jugador, mazo);
+    validarMano(jugador);
 }
 
-void validarMano(Jugador jugador, Mazo mazo[20])
+bool validarMano(Jugador jugador)
 {
     int cont = 0;
 
@@ -196,8 +199,17 @@ void validarMano(Jugador jugador, Mazo mazo[20])
     }
     if (cont == 4)
     {
-        repartirCartas(jugador);
+        if (ronda == 1)
+        {
+            repartirCartas(jugador);
+        }
+        else
+        {
+            return true;
+        }
     }
+
+    return false;
 }
 
 void mostrarMano(Jugador jugador)
@@ -256,19 +268,6 @@ void primerTurno(Jugador jugador1, Jugador jugador2)
     mostrarMano(jugador2);
 }
 
-int generarValorDado()
-{
-    int dado = rand() % 5 + 1;
-    return dado;
-}
-
-int generarIndice()
-{
-    int indice = rand() % CANT_CARTAS;
-
-    return indice;
-}
-
 void tirarDado(Jugador &jugador)
 {
     cout << "\nPresione enter para tirar el dado: " << getche() << endl;
@@ -279,8 +278,7 @@ void tirarDado(Jugador &jugador)
     switch (valor_dado)
     {
     case 1:
-        cout << "#1 Elegir una carta de su propio corral(1-5) y robar una carta del mazo.Se intercambian las dos.La carta robada pasa a formar parte del corral y la carta seleccionada se incorpora al mazo\n\n";
-
+        cout << "#1 Robar del mazo e intercambiar con una carta del corral.\n\n";
         intercambiarCarta(jugador);
         break;
     case 2:
@@ -301,18 +299,6 @@ void tirarDado(Jugador &jugador)
     }
 
     cout << endl;
-}
-
-int robarDelMazo()
-{
-    iCarta = generarIndice();
-
-    while (mazo[iCarta].carta == "0")
-    {
-        iCarta = generarIndice();
-    }
-
-    return iCarta;
 }
 
 void intercambiarCarta(Jugador &jugador)
@@ -345,6 +331,34 @@ void intercambiarCarta(Jugador &jugador)
     }
 }
 
+int robarDelMazo()
+{
+    iCarta = generarIndice();
+
+    while (mazo[iCarta].carta == "0")
+    {
+        iCarta = generarIndice();
+    }
+
+    return iCarta;
+}
+
+void buscarGanador(Jugador jugador1, Jugador jugador2, bool &estado)
+{
+    if (validarMano(jugador1))
+    {
+        estado = true;
+        cout << "El ganador es: " << jugador1.nombre;
+    }
+    else if (validarMano(jugador2))
+    {
+        estado = true;
+        cout << "El ganador es: " << jugador2.nombre;
+    }
+
+    cout << endl;
+}
+
 void mostrarEstadisticas()
 {
     cout << "hola" << endl;
@@ -355,4 +369,15 @@ void mostrarCreditos()
     cout << "Hola" << endl;
 }
 
-// Funciones para probar codigo.
+int generarIndice()
+{
+    int indice = rand() % CANT_CARTAS;
+
+    return indice;
+}
+
+int generarValorDado()
+{
+    int dado = rand() % 5 + 1;
+    return dado;
+}
