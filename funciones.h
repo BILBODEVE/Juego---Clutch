@@ -25,7 +25,7 @@ void mezclarMazo(Mazo mazo[20]);
 void mostrarMazo(Mazo mazo[20]);
 void repartirCartas(Jugador &jugador);
 bool validarMano(Jugador jugador);
-void mostrarMano(Jugador jugador);
+void mostrarMano(Jugador jugador1, Jugador jugador2);
 
 // Funciones para desarrollar la partida.
 void jugar(Jugador jugador1, Jugador jugador2, Mazo mazo[20]);

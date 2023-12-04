@@ -4,14 +4,11 @@
 
 using namespace std;
 
-// En ASCII '\n' equivale a 10.
 string tipo_carta[5] = {"10", "J", "Q", "K", "A"};
-// corazon,trebol,pica,diamante.
-
-string v_palos[4] = {"\u2665", "\u2663", "\u2660", "\u2666"};
+string v_palos[4] = {"\u2665", "\u2663", "\u2660", "\u2666"}; // corazon,trebol,pica,diamante.
 Mazo mazo[20];
 int iCarta;
-int ronda = 0;
+int ronda = 1;
 bool estado = false;
 
 void JugarClutch(Jugador jugador1, Jugador jugador2)
@@ -79,19 +76,19 @@ void validarEleccion(int eleccion)
 void jugar(Jugador jugador1, Jugador jugador2, Mazo mazo[20])
 {
     cargarMazo(mazo);
-    pedirNombres(jugador1, jugador2);
     mezclarMazo(mazo);
+    pedirNombres(jugador1, jugador2);
     repartirCartas(jugador1);
     repartirCartas(jugador2);
+
     while (estado == false)
     {
         datosJuego(jugador1, jugador2, ronda);
-        mostrarMano(jugador1);
-        mostrarMano(jugador2);
+        mostrarMano(jugador1, jugador2);
         cout << "---------------------------------------\n";
         primerTurno(jugador1, jugador2);
         cout << "---------------------------------------\n";
-        buscarGanador(jugador1, jugador2, estado);
+        // buscarGanador(jugador1, jugador2, estado);
         mezclarMazo(mazo);
     }
 }
@@ -141,7 +138,7 @@ void mezclarMazo(Mazo mazo[20])
 {
     for (int i = 0; i < 20; i++)
     {
-        int iCarta = rand() % CANT_CARTAS;
+        int iCarta = generarIndice();
         string auxCarta;
         string auxPalo;
 
@@ -170,18 +167,18 @@ void repartirCartas(Jugador &jugador) //&jugador es pasado como referencia para 
 {
     for (int i = 0; i < 5; i++)
     {
-        int iCarta = rand() % CANT_CARTAS;
+        int iCarta = generarIndice();
 
-        while (mazo[iCarta].carta == "0")
+        while (mazo[iCarta].carta == "0") // Si el elemento es =0 esa carta ya se entrego.
         {
-            iCarta = rand() % CANT_CARTAS;
+            iCarta = generarIndice();
         }
 
         jugador.mano[i].carta = mazo[iCarta].carta;
         jugador.mano[i].palo = mazo[iCarta].palo;
 
-        mazo[iCarta].carta = "0";
-        mazo[iCarta].palo = "0";
+        mazo[iCarta].carta = "0"; // Los elementos en las posiciones correspondientes se "eliminan" del mazo.
+        mazo[iCarta].palo = "0";  // Los elementos en las posiciones correspondientes se "eliminan" del mazo.
     }
     validarMano(jugador);
 }
@@ -190,16 +187,16 @@ bool validarMano(Jugador jugador)
 {
     int cont = 0;
 
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 5; i++)
     {
-        if (jugador.mano[i].carta == jugador.mano[i + 1].carta)
+        if (jugador.mano[i].carta == tipo_carta[i]) // si el orden de las cartas en la mano es igual a tipo_carta quiere decir que el corral esta ordenado.
         {
             cont++;
         }
     }
-    if (cont == 4)
+    if (cont == 5) // cont = 5 indica que se ordeno el corral.
     {
-        if (ronda == 1)
+        if (ronda == 1) // si la mano esta ordenada y es la 1er ronda, se vuelve a repartir.
         {
             repartirCartas(jugador);
         }
@@ -212,13 +209,20 @@ bool validarMano(Jugador jugador)
     return false;
 }
 
-void mostrarMano(Jugador jugador)
+void mostrarMano(Jugador jugador1, Jugador jugador2)
 {
-    cout << "Mano jugador: " << jugador.nombre << endl;
+    cout << "Mano jugador: " << jugador1.nombre << endl;
 
     for (int i = 0; i < 5; i++)
     {
-        cout << jugador.mano[i].carta << jugador.mano[i].palo << endl;
+        cout << jugador1.mano[i].carta << jugador1.mano[i].palo << endl;
+    }
+
+    cout << "Mano jugador: " << jugador2.nombre << endl;
+
+    for (int i = 0; i < 5; i++)
+    {
+        cout << jugador2.mano[i].carta << jugador2.mano[i].palo << endl;
     }
 
     cout << endl;
@@ -263,9 +267,6 @@ void primerTurno(Jugador jugador1, Jugador jugador2)
 
         indice_carta--;
     }
-
-    mostrarMano(jugador1);
-    mostrarMano(jugador2);
 }
 
 void tirarDado(Jugador &jugador)
@@ -311,24 +312,19 @@ void intercambiarCarta(Jugador &jugador)
     cartaElegida = cartaElegida - 1;
     cout << "#Presione enter para robar del mazo: " << getche() << endl;
 
-    int cartaRobada = robarDelMazo();
+    int cartaRobada = robarDelMazo(); // Genero un indice que se corresponde a el valor de una carta dentro del mazo.
 
+    // Guarda la carta seleccionada por el usuario para no perder su valor en la reasignacion posterior.
     auxCarta = jugador.mano[cartaElegida].carta;
     auxPalo = jugador.mano[cartaElegida].palo;
 
+    // La nueva carta del usuario se genera mediante lo que tenga mazo en el indice correspondiente a cartaRobada.
     jugador.mano[cartaElegida].carta = mazo[cartaRobada].carta;
     jugador.mano[cartaElegida].palo = mazo[cartaRobada].palo;
 
-    for (int i = 0; i < 20; i++)
-    {
-        if (mazo[i].carta == "0")
-        {
-            mazo[i].carta = auxCarta;
-            mazo[i].palo = auxPalo;
-
-            i = 20;
-        }
-    }
+    // La carta seleccionada para intercambiar reemplaza los valores de la carta robada.
+    mazo[cartaRobada].carta = auxCarta;
+    mazo[cartaRobada].palo = auxPalo;
 }
 
 int robarDelMazo()
@@ -343,7 +339,7 @@ int robarDelMazo()
     return iCarta;
 }
 
-void buscarGanador(Jugador jugador1, Jugador jugador2, bool &estado)
+/*void buscarGanador(Jugador jugador1, Jugador jugador2, bool &estado)
 {
     if (validarMano(jugador1))
     {
@@ -357,7 +353,7 @@ void buscarGanador(Jugador jugador1, Jugador jugador2, bool &estado)
     }
 
     cout << endl;
-}
+}*/
 
 void mostrarEstadisticas()
 {

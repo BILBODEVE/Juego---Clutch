@@ -9,11 +9,11 @@ struct Mazo
 struct Jugador
 {
     std::string nombre;
-    Mazo mano[5]; // Para determinar la mano, establezco una matriz de 2 filas. La primer fila corresponde al tipo de carta y la segunda al palo correspondiente.
+    Mazo mano[5];
     int puntos;
 };
 
-extern std::string tipo_carta[5]; // En ASCII '\n' equivale a 10.
-extern std::string v_palos[4];    // corazon,trebol,pica,diamante.
+extern std::string tipo_carta[5];
+extern std::string v_palos[4];
 
-const int CANT_CARTAS = 20;
+const int CANT_CARTAS = 19; // Mazo mazo indexa a partir de 0.

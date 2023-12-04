@@ -7,6 +7,8 @@ using namespace std;
 
 int main()
 {
+    // Revisar porque la carta elegida no se intercambia.
+
     srand(time(0));
 
     Jugador jugador1;
