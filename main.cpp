@@ -7,14 +7,12 @@ using namespace std;
 
 int main()
 {
-    // Revisar porque la carta elegida no se intercambia.
+    // La carta elegida no se intercambia porque la funcion que controla el primer turno + primerTurno + intercambiarCarta necesita recibir por referencia la struct jugador.
+    // Trabajar en eliminar la repeticion de parametros.
 
     srand(time(0));
 
-    Jugador jugador1;
-    Jugador jugador2;
-
-    JugarClutch(jugador1, jugador2);
+    JugarClutch();
 
     return 0;
 }

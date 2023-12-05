@@ -5,13 +5,13 @@
 int generarIndice();
 
 // Funcion main.
-void JugarClutch(Jugador jugador1, Jugador jugador2);
+void JugarClutch();
 
 // Bienvenida.
 void mensajeBienvenida();
 
 // Menu.
-void menuPrincipal(Jugador jugador1, Jugador jugador2, Mazo mazo[20]);
+void menuPrincipal(Mazo mazo[20]);
 int mostrarMenu();
 void validarEleccion(int eleccion);
 // Estadistica
@@ -25,14 +25,14 @@ void mezclarMazo(Mazo mazo[20]);
 void mostrarMazo(Mazo mazo[20]);
 void repartirCartas(Jugador &jugador);
 bool validarMano(Jugador jugador);
-void mostrarMano(Jugador jugador1, Jugador jugador2);
+void mostrarMano();
 
 // Funciones para desarrollar la partida.
-void jugar(Jugador jugador1, Jugador jugador2, Mazo mazo[20]);
-void buscarGanador(Jugador jugador1, Jugador jugador2, bool &estado);
-void datosJuego(Jugador jugador1, Jugador jugador2, int &ronda);
-void pedirNombres(Jugador &jugador1, Jugador &jugador2);
-void primerTurno(Jugador jugador1, Jugador jugador2);
+void jugar(Mazo mazo[20]);
+void buscarGanador(bool &estado);
+void datosJuego(int &ronda);
+void pedirNombres();
+void primerTurno();
 
 //  Acciones del juego
 int generarValorDado();

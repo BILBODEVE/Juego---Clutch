@@ -7,14 +7,16 @@ using namespace std;
 string tipo_carta[5] = {"10", "J", "Q", "K", "A"};
 string v_palos[4] = {"\u2665", "\u2663", "\u2660", "\u2666"}; // corazon,trebol,pica,diamante.
 Mazo mazo[20];
+Jugador jugador1;
+Jugador jugador2;
 int iCarta;
 int ronda = 1;
 bool estado = false;
 
-void JugarClutch(Jugador jugador1, Jugador jugador2)
+void JugarClutch()
 {
     mensajeBienvenida();
-    menuPrincipal(jugador1, jugador2, mazo);
+    menuPrincipal(mazo);
 }
 
 void mensajeBienvenida()
@@ -40,7 +42,7 @@ int mostrarMenu()
     return opcion;
 }
 
-void menuPrincipal(Jugador jugador1, Jugador jugador2, Mazo mazo[20])
+void menuPrincipal(Mazo mazo[20])
 {
     int eleccion;
     eleccion = mostrarMenu();
@@ -48,7 +50,7 @@ void menuPrincipal(Jugador jugador1, Jugador jugador2, Mazo mazo[20])
     switch (eleccion)
     {
     case 1:
-        jugar(jugador1, jugador2, mazo);
+        jugar(mazo);
         break;
     case 2:
         mostrarEstadisticas();
@@ -73,34 +75,34 @@ void validarEleccion(int eleccion)
     }
 }
 
-void jugar(Jugador jugador1, Jugador jugador2, Mazo mazo[20])
+void jugar(Mazo mazo[20])
 {
     cargarMazo(mazo);
     mezclarMazo(mazo);
-    pedirNombres(jugador1, jugador2);
+    pedirNombres();
     repartirCartas(jugador1);
     repartirCartas(jugador2);
-
     while (estado == false)
     {
-        datosJuego(jugador1, jugador2, ronda);
-        mostrarMano(jugador1, jugador2);
+        datosJuego(ronda);
+        mostrarMano();
         cout << "---------------------------------------\n";
-        primerTurno(jugador1, jugador2);
+        primerTurno();
         cout << "---------------------------------------\n";
-        // buscarGanador(jugador1, jugador2, estado);
+        // buscarGanador( estado);
         mezclarMazo(mazo);
+        // mostrarMano(jugador2);
     }
 }
 
-void datosJuego(Jugador jugador1, Jugador jugador2, int &ronda)
+void datosJuego(int &ronda)
 {
     cout << "Ronda: " << ronda++ << endl;
     cout << jugador1.nombre << " vs " << jugador2.nombre << endl;
     cout << endl;
 }
 
-void pedirNombres(Jugador &jugador1, Jugador &jugador2)
+void pedirNombres()
 {
     char confirma = 'N';
 
@@ -196,7 +198,7 @@ bool validarMano(Jugador jugador)
     }
     if (cont == 5) // cont = 5 indica que se ordeno el corral.
     {
-        if (ronda == 1) // si la mano esta ordenada y es la 1er ronda, se vuelve a repartir.
+        if (ronda == 1) // si la mano esta ordenada y es la 1er rondase vuelve a repartir.
         {
             repartirCartas(jugador);
         }
@@ -209,7 +211,7 @@ bool validarMano(Jugador jugador)
     return false;
 }
 
-void mostrarMano(Jugador jugador1, Jugador jugador2)
+void mostrarMano()
 {
     cout << "Mano jugador: " << jugador1.nombre << endl;
 
@@ -228,7 +230,7 @@ void mostrarMano(Jugador jugador1, Jugador jugador2)
     cout << endl;
 }
 
-void primerTurno(Jugador jugador1, Jugador jugador2)
+void primerTurno()
 {
     int indice_carta = 4;
     bool maximo = false;
@@ -339,12 +341,12 @@ int robarDelMazo()
     return iCarta;
 }
 
-/*void buscarGanador(Jugador jugador1, Jugador jugador2, bool &estado)
+/*void buscarGanador(  bool &estado)
 {
-    if (validarMano(jugador1))
+    if (validarMano())
     {
         estado = true;
-        cout << "El ganador es: " << jugador1.nombre;
+        cout << "El ganador es: " << .nombre;
     }
     else if (validarMano(jugador2))
     {
