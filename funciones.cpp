@@ -12,6 +12,7 @@ Jugador jugador2;
 int iCarta;
 int ronda = 1;
 bool estado = false;
+string turno;
 
 void JugarClutch()
 {
@@ -85,15 +86,15 @@ void jugar(Mazo mazo[20])
 
     datosJuego(ronda);
     mostrarMano();
-    cout << "---------------------------------------\n";
     primerTurno();
     cout << "---------------------------------------\n";
-
+    turnos();
+    cout << "---------------------------------------\n";
     while (estado == false)
     {
         datosJuego(ronda);
         mostrarMano();
-        // buscarGanador( estado);
+        turnos();
         mezclarMazo(mazo);
     }
 }
@@ -240,11 +241,10 @@ void primerTurno()
 
     while (maximo == false)
     {
-
         int cont1 = 0;
         int cont2 = 0;
 
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 4; i++)
         {
             if (jugador1.mano[i].carta == tipo_carta[indice_carta])
             {
@@ -256,28 +256,47 @@ void primerTurno()
                 cont2++;
             }
         }
-
         if (cont1 > cont2)
         {
-            cout << "Comienza el jugador: " << jugador1.nombre << endl;
             maximo = true;
-            tirarDado(jugador1);
+            turno = jugador1.nombre;
         }
         else if (cont2 > cont1)
         {
-            cout << "Comienza el jugador: " << jugador2.nombre << endl;
             maximo = true;
-            tirarDado(jugador2);
+            turno = jugador2.nombre;
         }
-
         indice_carta--;
     }
 }
 
-void tirarDado(Jugador &jugador)
+void turnos()
+{
+    if (turno == jugador1.nombre)
+    {
+        /*Una vez mostrado el jugador actual que debe jugar, se almacena en turno el jugador contrario.*/
+        cout << "Es turno de: " << jugador1.nombre;
+        turno = jugador2.nombre;
+        accionarSegunDado(jugador1);
+    }
+    else
+    {
+        cout << "Es turno de: " << jugador2.nombre;
+        turno = jugador1.nombre;
+        accionarSegunDado(jugador2);
+    }
+}
+
+int tirarDado()
+{
+    int dado = rand() % 5 + 1;
+    return dado;
+}
+
+void accionarSegunDado(Jugador &jugador)
 {
     cout << "\nPresione enter para tirar el dado: " << getche() << endl;
-    int valor_dado = 1;
+    int valor_dado = 1 /*tirarDado()*/;
 
     cout << "Valor del dado: #" << valor_dado << endl;
 
@@ -375,10 +394,4 @@ int generarIndice()
     int indice = rand() % CANT_CARTAS;
 
     return indice;
-}
-
-int generarValorDado()
-{
-    int dado = rand() % 5 + 1;
-    return dado;
 }

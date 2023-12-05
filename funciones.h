@@ -33,9 +33,10 @@ void buscarGanador(bool &estado);
 void datosJuego(int &ronda);
 void pedirNombres();
 void primerTurno();
+void turnos();
 
 //  Acciones del juego
-int generarValorDado();
-void tirarDado(Jugador &jugador);
+int tirarDado();
+void accionarSegunDado(Jugador &jugador);
 int robarDelMazo();
 void intercambiarCarta(Jugador &jugador);
