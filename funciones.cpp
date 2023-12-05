@@ -95,7 +95,7 @@ void jugar(Mazo mazo[20])
         datosJuego(ronda);
         mostrarMano();
         turnos();
-        mezclarMazo(mazo);
+        /*mezclarMazo(mazo); Deberia ejecutarse dentro de turnos()?*/
     }
 }
 
@@ -186,33 +186,28 @@ void repartirCartas(Jugador &jugador) //&jugador es pasado por referencia para m
         mazo[iCarta].carta = "0"; // Los elementos en las posiciones correspondientes se "eliminan" del mazo.
         mazo[iCarta].palo = "0";  // Los elementos en las posiciones correspondientes se "eliminan" del mazo.
     }
-    validarMano(jugador);
+    if (validarMano(jugador) == 5) // Si la condicion es =true , la mano esta ordenada. Se vuelve a repartir.
+    {
+        repartirCartas(jugador);
+    }
 }
 
-bool validarMano(Jugador jugador)
+int validarMano(Jugador jugador)
 {
     int cont = 0;
-
     for (int i = 0; i < 5; i++)
     {
         if (jugador.mano[i].carta == tipo_carta[i]) // si el orden de las cartas en la mano es igual a tipo_carta quiere decir que el corral esta ordenado.
         {
             cont++;
         }
-    }
-    if (cont == 5) // cont = 5 indica que se ordeno el corral.
-    {
-        if (ronda == 1) // si la mano esta ordenada y es la 1er rondase vuelve a repartir.
-        {
-            repartirCartas(jugador);
-        }
         else
         {
-            return true;
+            cont = 0;
         }
     }
 
-    return false;
+    return cont;
 }
 
 void mostrarMano()
@@ -244,7 +239,7 @@ void primerTurno()
         int cont1 = 0;
         int cont2 = 0;
 
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 5; i++)
         {
             if (jugador1.mano[i].carta == tipo_carta[indice_carta])
             {
@@ -275,15 +270,17 @@ void turnos()
     if (turno == jugador1.nombre)
     {
         /*Una vez mostrado el jugador actual que debe jugar, se almacena en turno el jugador contrario.*/
-        cout << "Es turno de: " << jugador1.nombre;
+        cout << "Es turno de: " << turno;
         turno = jugador2.nombre;
         accionarSegunDado(jugador1);
+        buscarGanador(jugador1);
     }
     else
     {
-        cout << "Es turno de: " << jugador2.nombre;
+        cout << "Es turno de: " << turno;
         turno = jugador1.nombre;
         accionarSegunDado(jugador2);
+        buscarGanador(jugador2);
     }
 }
 
@@ -363,9 +360,27 @@ int robarDelMazo()
     return iCarta;
 }
 
-// void buscarGanador(bool &estado)
-// {
-// }
+bool buscarGanador(Jugador jugador)
+{
+    if (validarMano(jugador) == 5)
+    {
+        estado = true;
+    }
+    mostrarGanador(jugador);
+
+    return estado;
+}
+
+void mostrarGanador(Jugador jugador)
+{
+    if (estado)
+    {
+        cout << "HITO: " << jugador.nombre << endl;
+        cout << "Puntos: " << 150 << endl;
+        cout << "Puntos: " << 10 << endl;
+        cout << jugador.nombre << "gano el juego con un total de " << 150 << "puntos";
+    }
+}
 
 void mostrarEstadisticas()
 {

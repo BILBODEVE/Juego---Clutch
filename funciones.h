@@ -24,16 +24,17 @@ void cargarMazo(Mazo mazo[20]);
 void mezclarMazo(Mazo mazo[20]);
 void mostrarMazo(Mazo mazo[20]);
 void repartirCartas(Jugador &jugador);
-bool validarMano(Jugador jugador);
+int validarMano(Jugador jugador);
 void mostrarMano();
 
 // Funciones para desarrollar la partida.
 void jugar(Mazo mazo[20]);
-void buscarGanador();
 void datosJuego(int &ronda);
 void pedirNombres();
 void primerTurno();
 void turnos();
+bool buscarGanador(Jugador jugador);
+void mostrarGanador(Jugador jugador);
 
 //  Acciones del juego
 int tirarDado();
