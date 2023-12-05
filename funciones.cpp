@@ -363,21 +363,9 @@ int robarDelMazo()
     return iCarta;
 }
 
-/*void buscarGanador(  bool &estado)
-{
-    if (validarMano())
-    {
-        estado = true;
-        cout << "El ganador es: " << .nombre;
-    }
-    else if (validarMano(jugador2))
-    {
-        estado = true;
-        cout << "El ganador es: " << jugador2.nombre;
-    }
-
-    cout << endl;
-}*/
+// void buscarGanador(bool &estado)
+// {
+// }
 
 void mostrarEstadisticas()
 {

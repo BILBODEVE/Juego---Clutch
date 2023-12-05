@@ -29,7 +29,7 @@ void mostrarMano();
 
 // Funciones para desarrollar la partida.
 void jugar(Mazo mazo[20]);
-void buscarGanador(bool &estado);
+void buscarGanador();
 void datosJuego(int &ronda);
 void pedirNombres();
 void primerTurno();
