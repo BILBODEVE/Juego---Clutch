@@ -82,16 +82,19 @@ void jugar(Mazo mazo[20])
     pedirNombres();
     repartirCartas(jugador1);
     repartirCartas(jugador2);
+
+    datosJuego(ronda);
+    mostrarMano();
+    cout << "---------------------------------------\n";
+    primerTurno();
+    cout << "---------------------------------------\n";
+
     while (estado == false)
     {
         datosJuego(ronda);
         mostrarMano();
-        cout << "---------------------------------------\n";
-        primerTurno();
-        cout << "---------------------------------------\n";
         // buscarGanador( estado);
         mezclarMazo(mazo);
-        // mostrarMano(jugador2);
     }
 }
 
@@ -165,7 +168,7 @@ void mostrarMazo(Mazo mazo[20])
     cout << endl;
 }
 
-void repartirCartas(Jugador &jugador) //&jugador es pasado como referencia para modificar el valor original de la matriz
+void repartirCartas(Jugador &jugador) //&jugador es pasado por referencia para modificar el valor original de la matriz
 {
     for (int i = 0; i < 5; i++)
     {
