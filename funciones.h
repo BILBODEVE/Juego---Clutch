@@ -31,13 +31,16 @@ void mostrarMano();
 void jugar(Mazo mazo[20]);
 void datosJuego(int &ronda);
 void pedirNombres();
-void primerTurno();
-void turnos();
+void buscarPrimerTurno();
+void determinarJugadorActual();
 bool buscarGanador(Jugador jugador);
 void mostrarGanador(Jugador jugador);
 
 //  Acciones del juego
 int tirarDado();
 void accionarSegunDado(Jugador &jugador);
+int seleccionarCarta();
+void intercambiarCarta(Jugador &Jugador, int cartaElegida);
 int robarDelMazo();
-void intercambiarCarta(Jugador &jugador);
+void intercambiarCartaPropia(Jugador &jugador);
+void intercambiarCartaRival();

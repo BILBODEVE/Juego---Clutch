@@ -86,15 +86,15 @@ void jugar(Mazo mazo[20])
 
     datosJuego(ronda);
     mostrarMano();
-    primerTurno();
+    buscarPrimerTurno();
     cout << "---------------------------------------\n";
-    turnos();
+    determinarJugadorActual();
     cout << "---------------------------------------\n";
     while (estado == false)
     {
         datosJuego(ronda);
         mostrarMano();
-        turnos();
+        determinarJugadorActual();
         /*mezclarMazo(mazo); Deberia ejecutarse dentro de turnos()?*/
     }
 }
@@ -229,7 +229,7 @@ void mostrarMano()
     cout << endl;
 }
 
-void primerTurno()
+void buscarPrimerTurno()
 {
     int indice_carta = 4;
     bool maximo = false;
@@ -265,12 +265,13 @@ void primerTurno()
     }
 }
 
-void turnos()
+void determinarJugadorActual()
 {
     if (turno == jugador1.nombre)
     {
         /*Una vez mostrado el jugador actual que debe jugar, se almacena en turno el jugador contrario.*/
         cout << "Es turno de: " << turno;
+        // El problema con esta asignacion, es que turno siempre guarda el jugador que sigue, no el actual. Esto me trae problemas a la hora de usar turno en otras funciones.
         turno = jugador2.nombre;
         accionarSegunDado(jugador1);
         buscarGanador(jugador1);
@@ -286,14 +287,14 @@ void turnos()
 
 int tirarDado()
 {
-    int dado = rand() % 5 + 1;
+    int dado = rand() % 2 + 1;
     return dado;
 }
 
 void accionarSegunDado(Jugador &jugador)
 {
     cout << "\nPresione enter para tirar el dado: " << getche() << endl;
-    int valor_dado = 1 /*tirarDado()*/;
+    int valor_dado = tirarDado();
 
     cout << "Valor del dado: #" << valor_dado << endl;
 
@@ -301,10 +302,11 @@ void accionarSegunDado(Jugador &jugador)
     {
     case 1:
         cout << "#1 Robar del mazo e intercambiar con una carta del corral.\n\n";
-        intercambiarCarta(jugador);
+        intercambiarCartaPropia(jugador);
         break;
     case 2:
-        cout << "Elegir una carta del corral del contrario(1-5) y robar una carta del mazo.Se intercambian las dos.La carta robada pasa a formar parte del corral del contrario y la carta seleccionada se incorpora al mazo.";
+        cout << "Elegir una carta del corral del contrario(1-5) y robar una carta del mazo.Se intercambian las dos.La carta robada pasa a formar parte del corral del contrario y la carta seleccionada se incorpora al mazo. \n\n";
+        intercambiarCartaRival();
         break;
     case 3:
         cout << "Elegir una carta del corral propio (1-5) e intercambiarla por una carta del corral del contrario(1 - 5).Las cartas seleccionadas se intercambian.";
@@ -323,21 +325,47 @@ void accionarSegunDado(Jugador &jugador)
     cout << endl;
 }
 
-void intercambiarCarta(Jugador &jugador)
+void intercambiarCartaPropia(Jugador &jugador)
 {
-    string auxCarta, auxPalo;
-    int cartaElegida;
 
     cout << "#Ingrese la carta que desea intercambiar: ";
-    cin >> cartaElegida;
-    cartaElegida = cartaElegida - 1;
+    int cartaElegida = seleccionarCarta();
     cout << "#Presione enter para robar del mazo: " << getche() << endl;
 
-    int cartaRobada = robarDelMazo(); // Genero un indice que se corresponde a el valor de una carta dentro del mazo.
+    intercambiarCarta(jugador, cartaElegida);
+}
+
+void intercambiarCartaRival()
+{
+    cout << "Ingrese la carta del contrario que desea intercambiar:";
+    int cartaElegida = seleccionarCarta();
+
+    if (turno == jugador1.nombre)
+    {
+        intercambiarCarta(jugador1, cartaElegida);
+    }
+    else
+    {
+        intercambiarCarta(jugador2, cartaElegida);
+    }
+}
+
+int seleccionarCarta()
+{
+    int carta;
+    cin >> carta;
+    carta -= 1;
+
+    return carta;
+}
+
+void intercambiarCarta(Jugador &jugador, int cartaElegida)
+{
+    int cartaRobada = robarDelMazo(); // Deberia estar por fuera de la funcion?
 
     // Guarda la carta seleccionada por el usuario para no perder su valor en la reasignacion posterior.
-    auxCarta = jugador.mano[cartaElegida].carta;
-    auxPalo = jugador.mano[cartaElegida].palo;
+    string auxCarta = jugador.mano[cartaElegida].carta;
+    string auxPalo = jugador.mano[cartaElegida].palo;
 
     // La nueva carta del usuario se genera mediante lo que tenga mazo en el indice correspondiente a cartaRobada.
     jugador.mano[cartaElegida].carta = mazo[cartaRobada].carta;
