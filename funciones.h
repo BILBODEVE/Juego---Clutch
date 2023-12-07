@@ -42,6 +42,7 @@ void accionarSegunDado(Jugador &jugador);
 int seleccionarCarta();
 int robarDelMazo();
 void intercambiarCarta(Jugador &Jugador, int cartaElegida);
+void intercambiarEntreCorral(Jugador &jugadorActual, Jugador &jugador2, int cartaElegida, int cartaRival);
 void intercambiarCartaPropia(Jugador &jugador);
 void intercambiarCartaRival();
 void intercambioEntreJugadores();
