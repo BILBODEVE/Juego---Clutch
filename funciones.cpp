@@ -285,7 +285,7 @@ void determinarJugadorActual()
 
 int tirarDado()
 {
-    int dado = rand() % 6 + 1;
+    int dado = rand() % 5 + 1;
     return dado;
 }
 
@@ -316,6 +316,7 @@ void accionarSegunDado(Jugador &jugador)
         break;
     case 5:
         cout << "Bloquear una carta del corral. La carta bloqueada no puede ser elegida por el contrario para intercambio(acciones 2 y 3) pero sí puede ser elegida por uno mismo.";
+        bloquearCarta(jugador);
         break;
     case 6:
         cout << "Elegir cualquiera de las acciones anteriores o bien pasar el turno.";
@@ -380,11 +381,27 @@ void intercambiarCartaRival()
 
     if (turno == jugador1.nombre)
     {
-        intercambiarCarta(jugador2, cartaElegida);
+        if (validarCartaBloqueada(jugador2, cartaElegida))
+        {
+            cout << "La carta se encuentra bloqueada, intentelo nuevamente: \n";
+            intercambiarCartaRival();
+        }
+        else
+        {
+            intercambiarCarta(jugador2, cartaElegida);
+        }
     }
     else
     {
-        intercambiarCarta(jugador1, cartaElegida);
+        if (validarCartaBloqueada(jugador1, cartaElegida))
+        {
+            cout << "La carta se encuentra bloqueada, intentelo nuevamente: \n";
+            intercambiarCartaRival();
+        }
+        else
+        {
+            intercambiarCarta(jugador1, cartaElegida);
+        }
     }
 }
 
@@ -432,6 +449,23 @@ void intercambiarCorralPropio(Jugador &jugador)
 
     jugador.mano[cartaIntercambiar].carta = auxCarta;
     jugador.mano[cartaIntercambiar].palo = auxPalo;
+}
+
+void bloquearCarta(Jugador &jugador)
+{
+    cout << "Seleccione la carta que desea bloquear: ";
+    int cartaElegida = seleccionarCarta();
+    jugador.cartasBloq[cartaElegida] = true;
+}
+
+bool validarCartaBloqueada(Jugador jugador, int cartaElegida)
+{
+    if (jugador.cartasBloq[cartaElegida] == true)
+    {
+        return true;
+    }
+
+    return false;
 }
 
 bool buscarGanador(Jugador jugador)

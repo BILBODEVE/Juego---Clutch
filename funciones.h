@@ -52,3 +52,6 @@ void intercambiarEntreCorral(Jugador &jugadorActual, Jugador &jugador2, int cart
 void intercambioEntreJugadores();
 //  accion4
 void intercambiarCorralPropio(Jugador &jugador);
+// accion5
+void bloquearCarta(Jugador &jugador);
+bool validarCartaBloqueada(Jugador jugador, int cartaElegida);

@@ -10,6 +10,7 @@ struct Jugador
 {
     std::string nombre;
     Mazo mano[5];
+    bool cartasBloq[5] = {false, false, false, false, false};
     int puntos;
 };
 
