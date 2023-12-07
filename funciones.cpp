@@ -269,19 +269,17 @@ void determinarJugadorActual()
 {
     if (turno == jugador1.nombre)
     {
-        /*Una vez mostrado el jugador actual que debe jugar, se almacena en turno el jugador contrario.*/
         cout << "Es turno de: " << turno;
-        // El problema con esta asignacion, es que turno siempre guarda el jugador que sigue, no el actual. Esto me trae problemas a la hora de usar turno en otras funciones.
-        turno = jugador2.nombre;
         accionarSegunDado(jugador1);
         buscarGanador(jugador1);
+        turno = jugador2.nombre; // El valor de turno se modifica una vez que se ejecute la accion del jugador actual.
     }
     else
     {
         cout << "Es turno de: " << turno;
-        turno = jugador1.nombre;
         accionarSegunDado(jugador2);
         buscarGanador(jugador2);
+        turno = jugador1.nombre;
     }
 }
 
@@ -325,31 +323,6 @@ void accionarSegunDado(Jugador &jugador)
     cout << endl;
 }
 
-void intercambiarCartaPropia(Jugador &jugador)
-{
-
-    cout << "#Ingrese la carta que desea intercambiar: ";
-    int cartaElegida = seleccionarCarta();
-    cout << "#Presione enter para robar del mazo: " << getche() << endl;
-
-    intercambiarCarta(jugador, cartaElegida);
-}
-
-void intercambiarCartaRival()
-{
-    cout << "Ingrese la carta del contrario que desea intercambiar:";
-    int cartaElegida = seleccionarCarta();
-
-    if (turno == jugador1.nombre)
-    {
-        intercambiarCarta(jugador1, cartaElegida);
-    }
-    else
-    {
-        intercambiarCarta(jugador2, cartaElegida);
-    }
-}
-
 int seleccionarCarta()
 {
     int carta;
@@ -357,6 +330,18 @@ int seleccionarCarta()
     carta -= 1;
 
     return carta;
+}
+
+int robarDelMazo()
+{
+    iCarta = generarIndice();
+
+    while (mazo[iCarta].carta == "0")
+    {
+        iCarta = generarIndice();
+    }
+
+    return iCarta;
 }
 
 void intercambiarCarta(Jugador &jugador, int cartaElegida)
@@ -376,18 +361,38 @@ void intercambiarCarta(Jugador &jugador, int cartaElegida)
     mazo[cartaRobada].palo = auxPalo;
 }
 
-int robarDelMazo()
+void intercambiarCartaPropia(Jugador &jugador)
 {
-    iCarta = generarIndice();
 
-    while (mazo[iCarta].carta == "0")
-    {
-        iCarta = generarIndice();
-    }
+    cout << "#Ingrese la carta que desea intercambiar: ";
+    int cartaElegida = seleccionarCarta();
+    cout << "#Presione enter para robar del mazo: " << getche() << endl;
 
-    return iCarta;
+    intercambiarCarta(jugador, cartaElegida);
 }
 
+void intercambiarCartaRival()
+{
+    cout << "Ingrese la carta del rival que desea intercambiar:";
+    int cartaElegida = seleccionarCarta();
+
+    if (turno == jugador1.nombre)
+    {
+        intercambiarCarta(jugador2, cartaElegida);
+    }
+    else
+    {
+        intercambiarCarta(jugador1, cartaElegida);
+    }
+}
+
+void intercambioEntreJugadores()
+{
+    cout << "Ingrese la carta de su corral: ";
+    int cartaElegida = seleccionarCarta();
+    cout << "Ingrese la carta del corral contrario: ";
+    int cartaRival = seleccionarCarta();
+}
 bool buscarGanador(Jugador jugador)
 {
     if (validarMano(jugador) == 5)
