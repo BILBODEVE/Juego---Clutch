@@ -285,7 +285,7 @@ void determinarJugadorActual()
 
 int tirarDado()
 {
-    int dado = rand() % 3 + 2;
+    int dado = rand() % 6 + 1;
     return dado;
 }
 
@@ -311,7 +311,8 @@ void accionarSegunDado(Jugador &jugador)
         intercambioEntreJugadores();
         break;
     case 4:
-        cout << "Intercambiar dos cartas del propio corral. Se eligen dos cartas del propio corral(1 - 5) y se intercambian entre sí.";
+        cout << "Intercambiar dos cartas del propio corral. Se eligen dos cartas del propio corral(1 - 5) y se intercambian entre sí. \n\n";
+        intercambiarCorralPropio(jugador);
         break;
     case 5:
         cout << "Bloquear una carta del corral. La carta bloqueada no puede ser elegida por el contrario para intercambio(acciones 2 y 3) pero sí puede ser elegida por uno mismo.";
@@ -414,6 +415,23 @@ void intercambiarEntreCorral(Jugador &jugadorActual, Jugador &jugador, int carta
 
     jugador.mano[cartaRival].carta = auxCarta;
     jugador.mano[cartaRival].palo = auxPalo;
+}
+
+void intercambiarCorralPropio(Jugador &jugador)
+{
+    cout << "Seleccione una carta: ";
+    int cartaElegida = seleccionarCarta();
+    cout << "Seleccione con cual sera intercambiada: ";
+    int cartaIntercambiar = seleccionarCarta();
+
+    string auxCarta = jugador.mano[cartaElegida].carta;
+    string auxPalo = jugador.mano[cartaElegida].palo;
+
+    jugador.mano[cartaElegida].carta = jugador.mano[cartaIntercambiar].carta;
+    jugador.mano[cartaElegida].palo = jugador.mano[cartaIntercambiar].palo;
+
+    jugador.mano[cartaIntercambiar].carta = auxCarta;
+    jugador.mano[cartaIntercambiar].palo = auxPalo;
 }
 
 bool buscarGanador(Jugador jugador)

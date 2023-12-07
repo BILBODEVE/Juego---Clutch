@@ -41,8 +41,14 @@ int tirarDado();
 void accionarSegunDado(Jugador &jugador);
 int seleccionarCarta();
 int robarDelMazo();
-void intercambiarCarta(Jugador &Jugador, int cartaElegida);
-void intercambiarEntreCorral(Jugador &jugadorActual, Jugador &jugador2, int cartaElegida, int cartaRival);
+
+void intercambiarCarta(Jugador &Jugador, int cartaElegida); // Realiza la accion de intercambiar una carta con el mazo
+// accion1
 void intercambiarCartaPropia(Jugador &jugador);
+// accion2
 void intercambiarCartaRival();
+// accion3
+void intercambiarEntreCorral(Jugador &jugadorActual, Jugador &jugador2, int cartaElegida, int cartaRival);
 void intercambioEntreJugadores();
+//  accion4
+void intercambiarCorralPropio(Jugador &jugador);
