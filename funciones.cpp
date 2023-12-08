@@ -94,6 +94,7 @@ void jugar(Mazo mazo[20])
     {
         datosJuego(ronda);
         mostrarMano();
+
         determinarJugadorActual();
         /*mezclarMazo(mazo); Deberia ejecutarse dentro de turnos()?*/
     }
@@ -292,9 +293,15 @@ int tirarDado()
 void accionarSegunDado(Jugador &jugador)
 {
     cout << "\nPresione enter para tirar el dado: " << getche() << endl;
-    int valor_dado = tirarDado();
+    int valor_dado = 6;
 
     cout << "Valor del dado: #" << valor_dado << endl;
+
+    if (valor_dado == 6)
+    {
+        cout << "Eliga una opcion de 1 a 5 o oresione 0 para pasar el turno: ";
+        cin >> valor_dado;
+    }
 
     switch (valor_dado)
     {
@@ -318,8 +325,11 @@ void accionarSegunDado(Jugador &jugador)
         cout << "Bloquear una carta del corral. La carta bloqueada no puede ser elegida por el contrario para intercambio(acciones 2 y 3) pero sí puede ser elegida por uno mismo.";
         bloquearCarta(jugador);
         break;
-    case 6:
-        cout << "Elegir cualquiera de las acciones anteriores o bien pasar el turno.";
+    case 0:
+        "#Turno cedido\n";
+        break;
+    default:
+        accionarSegunDado(jugador);
         break;
     }
 
@@ -370,6 +380,11 @@ void intercambiarCartaPropia(Jugador &jugador)
     cout << "#Ingrese la carta que desea intercambiar: ";
     int cartaElegida = seleccionarCarta();
     cout << "#Presione enter para robar del mazo: " << getche() << endl;
+
+    if (jugador.cartasBloq[cartaElegida])
+    {
+        jugador.cartasBloq[cartaElegida] = false;
+    }
 
     intercambiarCarta(jugador, cartaElegida);
 }
@@ -440,6 +455,13 @@ void intercambiarCorralPropio(Jugador &jugador)
     int cartaElegida = seleccionarCarta();
     cout << "Seleccione con cual sera intercambiada: ";
     int cartaIntercambiar = seleccionarCarta();
+
+    // Validacion en caso de que esta carta se bloquee en la accion4.
+    if (jugador.cartasBloq[cartaElegida])
+    {
+        jugador.cartasBloq[cartaElegida] = false;
+        jugador.cartasBloq[cartaIntercambiar] = true;
+    }
 
     string auxCarta = jugador.mano[cartaElegida].carta;
     string auxPalo = jugador.mano[cartaElegida].palo;
