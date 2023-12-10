@@ -11,6 +11,8 @@ int mostrarMenu();
 void mostrarEstadisticas();
 // Creditos
 void mostrarCreditos();
+// Instrucciones del juego;
+void mostrarInstrucciones();
 
 // Funciones para el mazo y mano
 void cargarMazo(Mazo mazo[20]);
@@ -26,7 +28,7 @@ void datosJuego(int &ronda);
 void pedirNombres();
 void buscarPrimerTurno();
 void determinarJugadorActual();
-bool buscarGanador(Jugador jugador);
+bool encontrarGanador(Jugador jugador);
 void mostrarGanador(Jugador jugador);
 void calcularGanadorHistorico(Jugador jugador);
 
@@ -57,6 +59,6 @@ int contarCartaMalUbicada(Jugador jugador);
 int sumarTotalPuntos(Jugador jugador);
 
 // Validaciones
-bool validarSeleccion(int cartaElegida);
+bool validarSeleccionCarta(int cartaElegida);
 bool validarCantCartasBlock(Jugador jugador); // Si un jugador tiene el total de cartas bloqueadas y el juego vuelve a pedir que bloquee otra carta, vuelve a tirar el dado
 void volverAlMenu();

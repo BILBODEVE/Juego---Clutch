@@ -25,6 +25,7 @@ int mostrarMenu()
     cout << "1 - JUGAR \n";
     cout << "2 - ESTADISTICAS\n";
     cout << "3 - CREDITOS\n";
+    cout << "4 - INSTRUCCIONES\n";
     cout << "--------------------\n";
     cout << "0 - SALIR\n";
     cout << "Ingrese una opcion: ";
@@ -38,7 +39,7 @@ void menuPrincipal()
 {
     int opcion = mostrarMenu();
 
-    while (opcion < 0 || opcion > 3)
+    while (opcion < 0 || opcion > 4)
     {
         cout << warning << " Opcion incorrecta. Intentelo nuevamente: \n\n";
         opcion = mostrarMenu();
@@ -56,6 +57,10 @@ void menuPrincipal()
         break;
     case 3:
         mostrarCreditos();
+        volverAlMenu();
+        break;
+    case 4:
+        mostrarInstrucciones();
         volverAlMenu();
         break;
     case 0:
@@ -196,7 +201,14 @@ void mostrarMano()
     cout << "| " << jugador1.nombre << endl;
     for (int i = 0; i < 5; i++)
     {
-        cout << "| " << jugador1.mano[i].carta << jugador1.mano[i].palo << " ";
+        if (jugador1.accion.cartaBlock[i] == true) // Si la carta esta bloqueada se muestra una x al lado de la carta.
+        {
+            cout << "| " << jugador1.mano[i].carta << jugador1.mano[i].palo << 'x' << " ";
+        }
+        else
+        {
+            cout << "| " << jugador1.mano[i].carta << jugador1.mano[i].palo << " ";
+        }
     }
 
     cout << "\n| \n";
@@ -204,7 +216,14 @@ void mostrarMano()
     cout << "| " << jugador2.nombre << endl;
     for (int i = 0; i < 5; i++)
     {
-        cout << "| " << jugador2.mano[i].carta << jugador2.mano[i].palo << " ";
+        if (jugador2.accion.cartaBlock[i] == true)
+        {
+            cout << "| " << jugador2.mano[i].carta << jugador2.mano[i].palo << 'x' << " ";
+        }
+        else
+        {
+            cout << "| " << jugador2.mano[i].carta << jugador2.mano[i].palo << " ";
+        }
     }
     cout << "\n--------------------------\n";
 }
@@ -251,20 +270,20 @@ void determinarJugadorActual()
     if (turno == jugador1.nombre)
     {
         accionarSegunDado(jugador1);
-        buscarGanador(jugador1);
+        encontrarGanador(jugador1);
         turno = jugador2.nombre; // El valor de turno se modifica una vez que se ejecute la accion del jugador actual y se valide si el corral esta ordenado.
     }
     else
     {
         accionarSegunDado(jugador2);
-        buscarGanador(jugador2);
+        encontrarGanador(jugador2);
         turno = jugador1.nombre;
     }
 }
 
 int tirarDado()
 {
-    int dado = rand() % 5 + 1;
+    int dado = rand() % 6 + 1;
     return dado;
 }
 
@@ -326,11 +345,9 @@ void accionarSegunDado(Jugador &jugador)
 int seleccionarCarta()
 {
     int carta;
-    cout << "Seleccione una carta: ";
     cin >> carta;
-    while (validarSeleccion(carta))
+    while (validarSeleccionCarta(carta))
     {
-
         cout << warning << warning << "La carta seleccionada es incorrrecta" << warning << warning << " Intentelo nuevamente: \n";
         cout << "Seleccione una carta: ";
         cin >> carta;
@@ -372,6 +389,7 @@ void intercambiarCarta(Jugador &jugador, int cartaElegida)
 
 void intercambiarCartaPropia(Jugador &jugador)
 {
+    cout << "Seleccione una carta: ";
     int cartaElegida = seleccionarCarta();
     cout << "#Presione enter para robar del mazo: " << getche() << endl;
 
@@ -385,62 +403,57 @@ void intercambiarCartaPropia(Jugador &jugador)
 
 void intercambiarCartaRival()
 {
+    cout << "Seleccione la carta del rival: ";
     int cartaElegida = seleccionarCarta();
 
     if (turno == jugador1.nombre)
     {
-        if (validarCartaBloqueada(jugador2, cartaElegida))
+        while (validarCartaBloqueada(jugador2, cartaElegida))
         {
             cout << warning << warning << " La carta se encuentra bloqueada " << warning << warning << " Intentelo nuevamente: \n";
-            intercambiarCartaRival();
+            cout << "Seleccione la carta del rival: ";
+            cartaElegida = seleccionarCarta();
         }
-        else
-        {
-            intercambiarCarta(jugador2, cartaElegida);
-        }
+        intercambiarCarta(jugador2, cartaElegida);
     }
     else
     {
-        if (validarCartaBloqueada(jugador1, cartaElegida))
+        while (validarCartaBloqueada(jugador1, cartaElegida))
         {
             cout << warning << warning << " La carta se encuentra bloqueada" << warning << warning << " Intentelo nuevamente: \n";
-            intercambiarCartaRival();
+            cout << "Seleccione la carta del rival: ";
+            cartaElegida = seleccionarCarta();
         }
-        else
-        {
-            intercambiarCarta(jugador1, cartaElegida);
-        }
+        intercambiarCarta(jugador1, cartaElegida);
     }
 }
 
 void intercambioEntreJugadores()
 {
+    cout << "Seleccione una carta de su corral: ";
     int cartaElegida = seleccionarCarta();
+    cout << "Seleccione una carta del corral contrario: ";
     int cartaRival = seleccionarCarta();
 
     if (turno == jugador1.nombre)
     {
-        if (validarCartaBloqueada(jugador2, cartaRival))
+        while (validarCartaBloqueada(jugador2, cartaRival))
         {
-            cout << warning << warning << " La carta se encuentra bloqueada " << warning << warning << " Seleccione otra carta: \n";
-            intercambioEntreJugadores();
+            cout << warning << warning << " La carta se encuentra bloqueada " << warning << warning << " Intentelo nuevamente: \n";
+            cout << "Seleccione una carta del corral contrario: ";
+            cartaRival = seleccionarCarta();
         }
-        else
-        {
-            intercambiarEntreCorral(jugador1, jugador2, cartaElegida, cartaRival);
-        }
+        intercambiarEntreCorral(jugador1, jugador2, cartaElegida, cartaRival);
     }
     else
     {
-        if (validarCartaBloqueada(jugador1, cartaRival))
+        while (validarCartaBloqueada(jugador1, cartaRival))
         {
-            cout << warning << warning << " La carta se encuentra bloqueada " << warning << warning << " Seleccione otra carta: \n";
-            intercambioEntreJugadores();
+            cout << warning << warning << " La carta se encuentra bloqueada " << warning << warning << " Intentelo nuevamente: \n";
+            cout << "Seleccione una carta del corral contrario: ";
+            cartaRival = seleccionarCarta();
         }
-        else
-        {
-            intercambiarEntreCorral(jugador2, jugador1, cartaElegida, cartaRival);
-        }
+        intercambiarEntreCorral(jugador2, jugador1, cartaElegida, cartaRival);
     }
 }
 
@@ -456,7 +469,7 @@ void intercambiarEntreCorral(Jugador &jugadorActual, Jugador &jugador, int carta
     jugador.mano[cartaRival].palo = auxPalo;
 
     // Si al intercambiar la carta buscarGanador() devuelve true, el jugadorActual = ganador , entonces se suman 10 puntos
-    if (buscarGanador(jugadorActual))
+    if (encontrarGanador(jugadorActual))
     {
         jugadorActual.puntos[1] = 10;
     }
@@ -467,12 +480,15 @@ void intercambiarEntreCorral(Jugador &jugadorActual, Jugador &jugador, int carta
 
 void intercambiarCorralPropio(Jugador &jugador)
 {
+    cout << "Seleccione la primer carta: ";
     int cartaElegida = seleccionarCarta();
+    cout << "Seleccione la segunda carta: ";
     int cartaIntercambiar = seleccionarCarta();
 
     while (cartaIntercambiar == cartaElegida)
     {
         cout << warning << warning << " No puede elegir 2 veces la misma carta " << warning << warning << " Intentelo nuevamente:\n";
+        cout << "Seleccione la segunda carta: ";
         cartaIntercambiar = seleccionarCarta();
     }
 
@@ -495,6 +511,7 @@ void intercambiarCorralPropio(Jugador &jugador)
 
 void bloquearCarta(Jugador &jugador)
 {
+    cout << "Seleccione la carta que desea bloquear: ";
     int cartaElegida = seleccionarCarta();
     if (jugador.accion.cartaBlock[cartaElegida])
     {
@@ -517,11 +534,12 @@ bool validarCartaBloqueada(Jugador jugador, int cartaElegida)
     return false;
 }
 
-bool buscarGanador(Jugador jugador)
+bool encontrarGanador(Jugador jugador)
 {
     if (validarMano(jugador) == 5)
     {
         estado = true;
+        jugador.puntos[0] = 10; // Puntos por ganar
         mostrarMano();
         puntajeTotal(jugador);
         mostrarGanador(jugador);
@@ -533,9 +551,6 @@ bool buscarGanador(Jugador jugador)
 
 void puntajeTotal(Jugador jugador)
 {
-
-    jugador.puntos[0] = 10;
-
     cartaMalUbicada(jugador);
 
     if (!jugador.accion.pasoTurno)
@@ -638,6 +653,36 @@ void mostrarCreditos()
     cout << "   # Nombre del equipo: no hay equipo je";
 }
 
+void mostrarInstrucciones()
+{
+    cout << "-------------------------------------------------------------\n";
+    cout << " Cantidad de jugadores: 2\n";
+    cout << " Cantidad de cartas: 5 por jugador\n";
+    cout << " Cantidad de dados: 1\n";
+    cout << " Valores posibles del dado: 1 a 6\n";
+    cout << " Objetivo: ordenar las cartas de tal manera que completen la fase de crecimineto de una gallina\n\n";
+
+    cout << "Las fases de crecimiento se representan por el tipo de carta: \n";
+    cout << "\t 10: Huevo listo para ser empollado\n";
+    cout << "\t J: Huevo empollado con una pequeña grieta\n";
+    cout << "\t Q: Se asoma un pico por la grieta\n";
+    cout << "\t K: Sale un pequeño pollito\n";
+    cout << "\t A: El pollito crecio y ahora es una gallina.\n\n";
+
+    cout << "Segun el valor del dado, se pueden realizar los siguientes movimientos:\n";
+    cout << "\t #1 Robar del mazo e intercambiar con una carta del corral.\n";
+    cout << "\t #2 Robar del mazo e intercambiarla con una carta del contrario.\n";
+    cout << "\t #3 Elegir una carta propia e intercambiarla con una del contrario.\n";
+    cout << "\t #4 Intercambiar dos cartas del propio corral.\n";
+    cout << "\t #5 Bloquear una carta del propio corral. El contrario no podra accionar sobre esta carta.\n";
+    cout << "\t #6 Elegir una opcion o pasar el turno.\n\n";
+
+    cout << "NOTA: la mano de cartas es denominada \"Corral\".\n\n";
+
+    cout << "BUENA SUERTE!\n";
+    cout << "-------------------------------------------------------------";
+}
+
 int generarIndice()
 {
     int indice = rand() % 19 + 0;
@@ -665,7 +710,7 @@ bool validarCantCartasBlock(Jugador jugador)
     return false;
 }
 
-bool validarSeleccion(int cartaElegida)
+bool validarSeleccionCarta(int cartaElegida)
 {
     if (cartaElegida < 1 || cartaElegida > 5)
     {
