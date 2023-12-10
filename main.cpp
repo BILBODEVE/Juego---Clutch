@@ -9,7 +9,7 @@ int main()
 {
     srand(time(0));
 
-    JugarClutch();
+    menuPrincipal();
 
     return 0;
 }

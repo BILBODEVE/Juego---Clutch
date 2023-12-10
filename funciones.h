@@ -4,16 +4,9 @@
 // Funciones globales.
 int generarIndice();
 
-// Funcion main.
-void JugarClutch();
-
-// Bienvenida.
-void mensajeBienvenida();
-
 // Menu.
-void menuPrincipal(Mazo mazo[20]);
+void menuPrincipal();
 int mostrarMenu();
-void validarEleccion(int eleccion);
 // Estadistica
 void mostrarEstadisticas();
 // Creditos
@@ -35,6 +28,7 @@ void buscarPrimerTurno();
 void determinarJugadorActual();
 bool buscarGanador(Jugador jugador);
 void mostrarGanador(Jugador jugador);
+void calcularGanadorHistorico(Jugador jugador);
 
 //  Acciones del juego
 int tirarDado();
@@ -56,5 +50,13 @@ void intercambiarCorralPropio(Jugador &jugador);
 void bloquearCarta(Jugador &jugador);
 bool validarCartaBloqueada(Jugador jugador, int cartaElegida);
 
+// Puntajes
+void puntajeTotal(Jugador ganador);
+void cartaMalUbicada(Jugador jugador);
+int contarCartaMalUbicada(Jugador jugador);
+int sumarTotalPuntos(Jugador jugador);
+
 // Validaciones
 bool validarSeleccion(int cartaElegida);
+bool validarCantCartasBlock(Jugador jugador); // Si un jugador tiene el total de cartas bloqueadas y el juego vuelve a pedir que bloquee otra carta, vuelve a tirar el dado
+void volverAlMenu();

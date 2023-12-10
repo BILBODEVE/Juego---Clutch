@@ -5,69 +5,65 @@
 using namespace std;
 
 string tipo_carta[5] = {"10", "J", "Q", "K", "A"};
-string v_palos[4] = {"\u2665", "\u2663", "\u2660", "\u2666"}; // corazon,trebol,pica,diamante.
+string v_palos[4] = {"\u2665", "\u2663", "\u2660", "\u2666"};
 Mazo mazo[20];
 Jugador jugador1;
 Jugador jugador2;
+GanadorHistorico ganador;
 int iCarta;
 int ronda = 1;
 bool estado = false;
 string turno;
 string warning = "\u26A0";
 
-void JugarClutch()
-{
-    cout << "\n*****Bienvenido a CLUTCH*****\n\n";
-    menuPrincipal(mazo);
-}
-
 int mostrarMenu()
 {
     int opcion;
-    cout << "Eliga una opcion: \n";
+
+    cout << "\n****** BIENVENIDO A CLUTCH ******\n";
     cout << "--------------------\n";
     cout << "1 - JUGAR \n";
     cout << "2 - ESTADISTICAS\n";
     cout << "3 - CREDITOS\n";
     cout << "--------------------\n";
     cout << "0 - SALIR\n";
-    cout << "Ingrese la opcion elegida: ";
+    cout << "Ingrese una opcion: ";
     cin >> opcion;
     cout << endl;
 
     return opcion;
 }
 
-void menuPrincipal(Mazo mazo[20])
+void menuPrincipal()
 {
-    int eleccion;
-    eleccion = mostrarMenu();
+    int opcion = mostrarMenu();
 
-    switch (eleccion)
+    while (opcion < 0 || opcion > 3)
+    {
+        cout << warning << " Opcion incorrecta. Intentelo nuevamente: \n\n";
+        opcion = mostrarMenu();
+    }
+
+    switch (opcion)
     {
     case 1:
         jugar(mazo);
+        volverAlMenu();
         break;
     case 2:
         mostrarEstadisticas();
+        volverAlMenu();
         break;
     case 3:
         mostrarCreditos();
+        volverAlMenu();
         break;
     case 0:
-        break; //   Corto la ejecucion del programa.
+        cout << "Gracias por visitar CLUTCH!";
+        break;
     default:
-        validarEleccion(eleccion);
-        cout << endl;
-    }
-}
-
-void validarEleccion(int eleccion)
-{
-    while (eleccion < 0 || eleccion > 3)
-    {
-        cout << "ERROR: La opcion ingresada es incorrecta. \n Intentelo nuevamente a continuacion: \n\n";
-        eleccion = mostrarMenu();
+        menuPrincipal();
+        break;
     }
 }
 
@@ -137,9 +133,9 @@ void mezclarMazo(Mazo mazo[20])
 {
     for (int i = 0; i < 20; i++)
     {
-        int iCarta = generarIndice();
         string auxCarta;
         string auxPalo;
+        int iCarta = generarIndice();
 
         auxCarta = mazo[i].carta;
         auxPalo = mazo[i].palo;
@@ -150,16 +146,6 @@ void mezclarMazo(Mazo mazo[20])
         mazo[iCarta].carta = auxCarta;
         mazo[iCarta].palo = auxPalo;
     }
-}
-
-void mostrarMazo(Mazo mazo[20])
-{
-    for (int i = 0; i < 20; i++)
-    {
-        cout << mazo[i].carta << mazo[i].palo << endl;
-    }
-
-    cout << endl;
 }
 
 void repartirCartas(Jugador &jugador) //&jugador paso por referencia para modificar el valor original de la matriz
@@ -245,6 +231,8 @@ void buscarPrimerTurno()
                 cont2++;
             }
         }
+        indice_carta--;
+
         if (cont1 > cont2)
         {
             maximo = true;
@@ -255,7 +243,6 @@ void buscarPrimerTurno()
             maximo = true;
             turno = jugador2.nombre;
         }
-        indice_carta--;
     }
 }
 
@@ -265,7 +252,7 @@ void determinarJugadorActual()
     {
         accionarSegunDado(jugador1);
         buscarGanador(jugador1);
-        turno = jugador2.nombre; // El valor de turno se modifica una vez que se ejecute la accion del jugador actual.
+        turno = jugador2.nombre; // El valor de turno se modifica una vez que se ejecute la accion del jugador actual y se valide si el corral esta ordenado.
     }
     else
     {
@@ -284,7 +271,7 @@ int tirarDado()
 void accionarSegunDado(Jugador &jugador)
 {
     cout << "\nPresione enter para tirar el dado: " << getche() << "\n\n";
-    int valor_dado = 4;
+    int valor_dado = tirarDado();
 
     cout << "Valor del dado: " << valor_dado << endl;
 
@@ -301,7 +288,7 @@ void accionarSegunDado(Jugador &jugador)
         intercambiarCartaPropia(jugador);
         break;
     case 2:
-        cout << "#2 Robar del mazo e intercambiarla con una carta del cotrario(1 a 5).\n\n";
+        cout << "#2 Robar del mazo e intercambiarla con una carta del contrario(1 a 5).\n\n";
         intercambiarCartaRival();
         break;
     case 3:
@@ -314,9 +301,18 @@ void accionarSegunDado(Jugador &jugador)
         break;
     case 5:
         cout << "#5 Bloquear una carta del propio corral. El contrario no podra accionar sobre esta carta.\n\n";
-        bloquearCarta(jugador);
+        if (validarCantCartasBlock(jugador)) //  Si el jugador tiene todas sus cartas bloqueadas , vuelve a tirar el dado.
+        {
+            accionarSegunDado(jugador);
+        }
+        else
+        {
+            bloquearCarta(jugador);
+        }
         break;
     case 0:
+        // cambio el estado para identificar si la accion sucedio posteriormente y sumar o no puntos.
+        jugador.accion.pasoTurno = true;
         "#Turno cedido\n\n";
         break;
     default:
@@ -379,9 +375,9 @@ void intercambiarCartaPropia(Jugador &jugador)
     int cartaElegida = seleccionarCarta();
     cout << "#Presione enter para robar del mazo: " << getche() << endl;
 
-    if (jugador.cartasBloq[cartaElegida])
+    if (jugador.accion.cartaBlock[cartaElegida])
     {
-        jugador.cartasBloq[cartaElegida] = false;
+        jugador.accion.cartaBlock[cartaElegida] = false;
     }
 
     intercambiarCarta(jugador, cartaElegida);
@@ -395,7 +391,7 @@ void intercambiarCartaRival()
     {
         if (validarCartaBloqueada(jugador2, cartaElegida))
         {
-            cout << warning << warning << " La carta se encuentra bloqueada " << warning << warning << " Seleccione otra carta: \n";
+            cout << warning << warning << " La carta se encuentra bloqueada " << warning << warning << " Intentelo nuevamente: \n";
             intercambiarCartaRival();
         }
         else
@@ -407,7 +403,7 @@ void intercambiarCartaRival()
     {
         if (validarCartaBloqueada(jugador1, cartaElegida))
         {
-            cout << warning << warning << " La carta se encuentra bloqueada" << warning << warning << " Seleccione otra carta: \n";
+            cout << warning << warning << " La carta se encuentra bloqueada" << warning << warning << " Intentelo nuevamente: \n";
             intercambiarCartaRival();
         }
         else
@@ -438,7 +434,7 @@ void intercambioEntreJugadores()
     {
         if (validarCartaBloqueada(jugador1, cartaRival))
         {
-            cout << "!!La carta se encuentra bloqueada, seleccione otra carta: \n";
+            cout << warning << warning << " La carta se encuentra bloqueada " << warning << warning << " Seleccione otra carta: \n";
             intercambioEntreJugadores();
         }
         else
@@ -458,6 +454,15 @@ void intercambiarEntreCorral(Jugador &jugadorActual, Jugador &jugador, int carta
 
     jugador.mano[cartaRival].carta = auxCarta;
     jugador.mano[cartaRival].palo = auxPalo;
+
+    // Si al intercambiar la carta buscarGanador() devuelve true, el jugadorActual = ganador , entonces se suman 10 puntos
+    if (buscarGanador(jugadorActual))
+    {
+        jugadorActual.puntos[1] = 10;
+    }
+
+    // Cambio el estado para conocer si la accion sucedio y sumar o no puntos.
+    jugador.accion.sufrioRobo = true;
 }
 
 void intercambiarCorralPropio(Jugador &jugador)
@@ -472,10 +477,10 @@ void intercambiarCorralPropio(Jugador &jugador)
     }
 
     // Validacion en caso de que esta carta se bloquee en la accion5.
-    if (jugador.cartasBloq[cartaElegida])
+    if (jugador.accion.cartaBlock[cartaElegida])
     {
-        jugador.cartasBloq[cartaElegida] = false;
-        jugador.cartasBloq[cartaIntercambiar] = true;
+        jugador.accion.cartaBlock[cartaElegida] = false;
+        jugador.accion.cartaBlock[cartaIntercambiar] = true;
     }
 
     string auxCarta = jugador.mano[cartaElegida].carta;
@@ -491,20 +496,20 @@ void intercambiarCorralPropio(Jugador &jugador)
 void bloquearCarta(Jugador &jugador)
 {
     int cartaElegida = seleccionarCarta();
-    if (jugador.cartasBloq[cartaElegida])
+    if (jugador.accion.cartaBlock[cartaElegida])
     {
         cout << warning << warning << " La carta seleccionada ya ha sido bloqueada. " << warning << warning << " Intentelo nuevamente: \n";
         bloquearCarta(jugador);
     }
     else
     {
-        jugador.cartasBloq[cartaElegida] = true;
+        jugador.accion.cartaBlock[cartaElegida] = true;
     }
 }
 
 bool validarCartaBloqueada(Jugador jugador, int cartaElegida)
 {
-    if (jugador.cartasBloq[cartaElegida] == true)
+    if (jugador.accion.cartaBlock[cartaElegida] == true)
     {
         return true;
     }
@@ -517,38 +522,147 @@ bool buscarGanador(Jugador jugador)
     if (validarMano(jugador) == 5)
     {
         estado = true;
+        mostrarMano();
+        puntajeTotal(jugador);
+        mostrarGanador(jugador);
+        calcularGanadorHistorico(jugador);
     }
-    mostrarGanador(jugador);
 
-    return estado;
+    return estado; // innecesario porque estado es global?
+}
+
+void puntajeTotal(Jugador jugador)
+{
+
+    jugador.puntos[0] = 10;
+
+    cartaMalUbicada(jugador);
+
+    if (!jugador.accion.pasoTurno)
+    {
+        jugador.puntos[3] = 10;
+    }
+    if (!jugador.accion.sufrioRobo)
+    {
+        jugador.puntos[4] = 5;
+    }
+}
+
+void cartaMalUbicada(Jugador jugador)
+{
+    if (jugador.nombre == jugador1.nombre)
+    {
+        jugador1.puntos[2] = contarCartaMalUbicada(jugador2);
+    }
+    else
+    {
+        jugador2.puntos[2] = contarCartaMalUbicada(jugador1);
+    }
+}
+
+int contarCartaMalUbicada(Jugador jugador)
+{
+    int contPuntos = 0;
+    for (int i = 0; i < 5; i++)
+    {
+        if (jugador.mano[i].carta != tipo_carta[i])
+        {
+            contPuntos += 5;
+        }
+    }
+
+    return contPuntos;
+}
+
+int sumarTotalPuntos(Jugador jugador)
+{
+    int totalPuntos = 0;
+    for (int i = 0; i < 5; i++)
+    {
+        totalPuntos += jugador.puntos[i];
+    }
+
+    return totalPuntos;
 }
 
 void mostrarGanador(Jugador jugador)
 {
-    if (estado)
-    {
-        cout << "HITO: " << jugador.nombre << endl;
-        cout << "Puntos: " << 150 << endl;
-        cout << "Puntos: " << 10 << endl;
-        cout << jugador.nombre << "gano el juego con un total de " << 150 << "puntos";
-    }
+    cout << "******** GANADOR: " << jugador.nombre << " ********\n";
+    cout << "-------------------------------------------\n";
+    cout << "PUNTAJE: \n";
+    cout << "-------------------------------------------\n";
+    cout << "Ganar la partida: " << jugador.puntos[0] << endl;
+    cout << "Robo ultima carta al jugador rival: " << jugador.puntos[1] << endl;
+    cout << "Cartas mal ubicadas del rival " << jugador.puntos[2] / 5 << ": " << jugador.puntos[2] << endl;
+    cout << "Sin pasar de turno: " << jugador.puntos[3] << endl;
+    cout << "Sin haber sufrido robos: " << jugador.puntos[4] << endl;
+    cout << "-------------------------------------------\n";
+    cout << "TOTAL: " << sumarTotalPuntos(jugador);
 }
 
 void mostrarEstadisticas()
 {
-    cout << "hola" << endl;
+    cout << "******** GANADOR HISTORICO: " << ganador.nombre << " ********\n";
+    cout << "-------------------------------------------\n";
+    cout << "PUNTAJE: \n";
+    cout << "-------------------------------------------\n";
+    cout << "Ganar la partida: " << ganador.puntos[0] << endl;
+    cout << "Robo ultima carta al jugador rival: " << ganador.puntos[1] << endl;
+    cout << "Cartas mal ubicadas del rival: " << ganador.puntos[2] << endl;
+    cout << "Sin pasar de turno: " << ganador.puntos[3] << endl;
+    cout << "Sin haber sufrido robos: " << ganador.puntos[4] << endl;
+    cout << "-------------------------------------------\n";
+    cout << "TOTAL: " << ganador.puntajeTotal;
+}
+
+void calcularGanadorHistorico(Jugador jugador)
+{
+    if (sumarTotalPuntos(jugador) > ganador.puntajeTotal)
+    {
+        ganador.nombre = jugador.nombre;
+        ganador.puntajeTotal = sumarTotalPuntos(jugador);
+
+        for (int i = 0; i < 5; i++) // Al ser struct de distinto tipos no puedo asignar jugador.puntos a ganador.puntos.
+        {
+            ganador.puntos[i] = jugador.puntos[i];
+        }
+    }
 }
 
 void mostrarCreditos()
 {
-    cout << "Hola" << endl;
+    cout << "Desarrollo del proyecto a cargo de: \n";
+    cout << "   # Nombre: Facundo Tomas\n";
+    cout << "   # Apellido: Araujo Avalos\n";
+    cout << "   # Legajo: 29681\n";
+    cout << "   # Nombre del equipo: no hay equipo je";
 }
 
 int generarIndice()
 {
-    int indice = rand() % CANT_CARTAS;
+    int indice = rand() % 19 + 0;
 
     return indice;
+}
+
+bool validarCantCartasBlock(Jugador jugador)
+{
+    int cont = 0;
+
+    for (int i = 0; i < 5; i++)
+    {
+        if (jugador.accion.cartaBlock[i] == true)
+        {
+            cont++;
+        }
+    }
+
+    if (cont == 5)
+    {
+        return true;
+    }
+
+    return false;
 }
 
 bool validarSeleccion(int cartaElegida)
@@ -559,4 +673,39 @@ bool validarSeleccion(int cartaElegida)
     }
 
     return false;
+}
+
+void mostrarMazo(Mazo mazo[20])
+{
+    for (int i = 0; i < 20; i++)
+    {
+        cout << mazo[i].carta << mazo[i].palo << endl;
+    }
+
+    cout << endl;
+}
+
+void volverAlMenu()
+{
+    char opcion;
+    cout << "\n\nDesea volver al menu principal? S(Si)/N(No): ";
+    cin >> opcion;
+    opcion = toupper(opcion);
+
+    if (opcion != 'S' && opcion != 'N')
+    {
+        cout << warning << " La letra ingresada es incorrecta. Intentelo nuevamente: ";
+        cin >> opcion;
+        opcion = toupper(opcion);
+    }
+
+    if (opcion == 'S')
+    {
+        menuPrincipal();
+    }
+    else
+    {
+
+        cout << "Gracias por visitar CLUTCH!";
+    }
 }
