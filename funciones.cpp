@@ -77,7 +77,6 @@ void jugar(Mazo mazo[20])
     pedirNombres();
     repartirCartas(jugador1);
     repartirCartas(jugador2);
-
     datosJuego(ronda);
     buscarPrimerTurno();
     cout << "# Es turno de: " << turno << endl;
@@ -162,7 +161,7 @@ void mostrarMazo(Mazo mazo[20])
     cout << endl;
 }
 
-void repartirCartas(Jugador &jugador) //&jugador es pasado por referencia para modificar el valor original de la matriz
+void repartirCartas(Jugador &jugador) //&jugador paso por referencia para modificar el valor original de la matriz
 {
     for (int i = 0; i < 5; i++)
     {
@@ -463,7 +462,14 @@ void intercambiarCorralPropio(Jugador &jugador)
     cout << "Seleccione con cual sera intercambiada: ";
     int cartaIntercambiar = seleccionarCarta();
 
-    // Validacion en caso de que esta carta se bloquee en la accion4.
+    while (cartaIntercambiar == cartaElegida)
+    {
+        cout << "!No puede elegir 2 veces la misma carta, intentelo nuevamente.\n";
+        cout << "Seleccione con cual sera intercambiada: ";
+        int cartaIntercambiar = seleccionarCarta();
+    }
+
+    // Validacion en caso de que esta carta se bloquee en la accion5.
     if (jugador.cartasBloq[cartaElegida])
     {
         jugador.cartasBloq[cartaElegida] = false;
