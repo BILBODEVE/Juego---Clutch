@@ -13,6 +13,7 @@ int iCarta;
 int ronda = 1;
 bool estado = false;
 string turno;
+string warning = "\u26A0";
 
 void JugarClutch()
 {
@@ -283,7 +284,7 @@ int tirarDado()
 void accionarSegunDado(Jugador &jugador)
 {
     cout << "\nPresione enter para tirar el dado: " << getche() << "\n\n";
-    int valor_dado = 5;
+    int valor_dado = 4;
 
     cout << "Valor del dado: " << valor_dado << endl;
 
@@ -329,7 +330,16 @@ void accionarSegunDado(Jugador &jugador)
 int seleccionarCarta()
 {
     int carta;
+    cout << "Seleccione una carta: ";
     cin >> carta;
+    while (validarSeleccion(carta))
+    {
+
+        cout << warning << warning << "La carta seleccionada es incorrrecta" << warning << warning << " Intentelo nuevamente: \n";
+        cout << "Seleccione una carta: ";
+        cin >> carta;
+    }
+
     carta -= 1;
 
     return carta;
@@ -366,8 +376,6 @@ void intercambiarCarta(Jugador &jugador, int cartaElegida)
 
 void intercambiarCartaPropia(Jugador &jugador)
 {
-
-    cout << "#Ingrese la carta que desea intercambiar: ";
     int cartaElegida = seleccionarCarta();
     cout << "#Presione enter para robar del mazo: " << getche() << endl;
 
@@ -381,14 +389,13 @@ void intercambiarCartaPropia(Jugador &jugador)
 
 void intercambiarCartaRival()
 {
-    cout << "Ingrese la carta del rival que desea intercambiar:";
     int cartaElegida = seleccionarCarta();
 
     if (turno == jugador1.nombre)
     {
         if (validarCartaBloqueada(jugador2, cartaElegida))
         {
-            cout << "!!La carta se encuentra bloqueada, seleccione otra carta: \n";
+            cout << warning << warning << " La carta se encuentra bloqueada " << warning << warning << " Seleccione otra carta: \n";
             intercambiarCartaRival();
         }
         else
@@ -400,7 +407,7 @@ void intercambiarCartaRival()
     {
         if (validarCartaBloqueada(jugador1, cartaElegida))
         {
-            cout << "!!La carta se encuentra bloqueada, seleccione otra carta: \n";
+            cout << warning << warning << " La carta se encuentra bloqueada" << warning << warning << " Seleccione otra carta: \n";
             intercambiarCartaRival();
         }
         else
@@ -412,16 +419,14 @@ void intercambiarCartaRival()
 
 void intercambioEntreJugadores()
 {
-    cout << "Ingrese la carta de su corral: ";
     int cartaElegida = seleccionarCarta();
-    cout << "Ingrese la carta del corral contrario: ";
     int cartaRival = seleccionarCarta();
 
     if (turno == jugador1.nombre)
     {
         if (validarCartaBloqueada(jugador2, cartaRival))
         {
-            cout << "!!La carta se encuentra bloqueada, seleccione otra carta: \n";
+            cout << warning << warning << " La carta se encuentra bloqueada " << warning << warning << " Seleccione otra carta: \n";
             intercambioEntreJugadores();
         }
         else
@@ -457,16 +462,13 @@ void intercambiarEntreCorral(Jugador &jugadorActual, Jugador &jugador, int carta
 
 void intercambiarCorralPropio(Jugador &jugador)
 {
-    cout << "Seleccione una carta: ";
     int cartaElegida = seleccionarCarta();
-    cout << "Seleccione con cual sera intercambiada: ";
     int cartaIntercambiar = seleccionarCarta();
 
     while (cartaIntercambiar == cartaElegida)
     {
-        cout << "!No puede elegir 2 veces la misma carta, intentelo nuevamente.\n";
-        cout << "Seleccione con cual sera intercambiada: ";
-        int cartaIntercambiar = seleccionarCarta();
+        cout << warning << warning << " No puede elegir 2 veces la misma carta " << warning << warning << " Intentelo nuevamente:\n";
+        cartaIntercambiar = seleccionarCarta();
     }
 
     // Validacion en caso de que esta carta se bloquee en la accion5.
@@ -488,11 +490,10 @@ void intercambiarCorralPropio(Jugador &jugador)
 
 void bloquearCarta(Jugador &jugador)
 {
-    cout << "Seleccione la carta que desea bloquear: ";
     int cartaElegida = seleccionarCarta();
     if (jugador.cartasBloq[cartaElegida])
     {
-        cout << "!!La carta seleccionada ya ha sido bloqueada. Intentelo nuevamente: \n";
+        cout << warning << warning << " La carta seleccionada ya ha sido bloqueada. " << warning << warning << " Intentelo nuevamente: \n";
         bloquearCarta(jugador);
     }
     else
@@ -548,4 +549,14 @@ int generarIndice()
     int indice = rand() % CANT_CARTAS;
 
     return indice;
+}
+
+bool validarSeleccion(int cartaElegida)
+{
+    if (cartaElegida < 1 || cartaElegida > 5)
+    {
+        return true;
+    }
+
+    return false;
 }

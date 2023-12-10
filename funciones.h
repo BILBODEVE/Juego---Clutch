@@ -55,3 +55,6 @@ void intercambiarCorralPropio(Jugador &jugador);
 // accion5
 void bloquearCarta(Jugador &jugador);
 bool validarCartaBloqueada(Jugador jugador, int cartaElegida);
+
+// Validaciones
+bool validarSeleccion(int cartaElegida);
