@@ -28,5 +28,5 @@ struct GanadorHistorico
     int puntajeTotal = 0;
 };
 
-extern std::string tipo_carta[5];
-extern std::string v_palos[4]; // corazon,trebol,pica,diamante.
+const std::string TIPO_CARTA[5] = {"10", "J", "Q", "K", "A"};
+const std::string V_PALOS[4] = {"\u2665", "\u2663", "\u2660", "\u2666"}; // corazon,trebol,pica,diamante.
