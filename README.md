@@ -46,7 +46,7 @@ La fase de crecimiento está determinada por las cartas y es la siguiente:
 
 ---
 
-#Experiencia personal
+# Experiencia personal
 
 Clutch es el proyecto final propuesto para la cátedra de Laboratorio 1 dentro de la UTN FRGP.
 
