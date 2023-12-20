@@ -1,6 +1,7 @@
 #pragma once
 #include "estructuras.h"
 
+// Funcion main.
 void jugarClutch(Jugador &jugador1, Jugador &jugador2, Mazo mazo[20]);
 // Menu.
 int mostrarMenu();
@@ -60,5 +61,5 @@ int generarIndice();
 // Validaciones
 int validarMano(Jugador jugador);
 bool validarSeleccionCarta(int cartaElegida);
-bool validarCantCartasBlock(Jugador jugador);
+bool contarCantCartasBlock(Jugador jugador);
 bool validarCartaBloqueada(Jugador jugadorActual, int cartaElegida);
