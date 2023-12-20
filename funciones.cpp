@@ -427,7 +427,7 @@ bool encontrarGanador(Jugador &jugadorActual, Jugador &jugadorAnterior, bool &ex
 {
     if (validarMano(jugadorActual) == 5)
     {
-        jugadorActual.puntos[0] = 10; // Puntos por ganar la partida
+        jugadorActual.puntos[0] = 15; // Puntos por ganar la partida
 
         cout << "PARTIDA FINALIZADA!! EL GANADOR ES: " << jugadorActual.nombre << endl;
         mostrarMano(jugadorActual, jugadorAnterior);
