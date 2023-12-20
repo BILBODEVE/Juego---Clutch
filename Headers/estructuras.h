@@ -23,5 +23,3 @@ struct Jugador
 
 const std::string TIPO_CARTA[5] = {"10", "J", "Q", "K", "A"};
 const std::string V_PALOS[4] = {"\u2665", "\u2663", "\u2660", "\u2666"}; // corazon,trebol,pica,diamante.
-
-const std::string warning;

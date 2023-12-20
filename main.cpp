@@ -1,8 +1,8 @@
 #include <iostream>
 #include <cstdlib> //rand() ,srand()
 #include <time.h>  //time()
-#include "Headers/funciones.h"
-#include "Headers/estructuras.h"
+#include "headers/funciones.h"
+#include "headers/estructuras.h"
 
 using namespace std;
 

@@ -36,18 +36,18 @@ void accionarSegunDado(Jugador &jugador1, Jugador &jugador2, Mazo mazo[20]);
 
 int seleccionarCarta();
 int robarDelMazo(Mazo mazo[20]);
-void intercambiarCarta(Jugador &jugadorActual, int cartaElegida, Mazo mazo[20]); // Realiza la accion de intercambiar una carta con el mazo
+void intercambiarCarta(Jugador &jugadorActual, int cartaElegida, Mazo mazo[20]);
 // accion1
-void intercambiarCartaPropia(Jugador &jugador, Mazo mazo[20]);
+void accionarDado1(Jugador &jugador, Mazo mazo[20]);
 // accion2
-void intercambiarCartaRival(Jugador &jugadorAnterior, Mazo mazo[20]);
+void accionarDado2(Jugador &jugadorAnterior, Mazo mazo[20]);
 // accion3
+void accionarDado3(Jugador &jugadorActual, Jugador &jugadorAnterior);
 void intercambiarEntreCorral(Jugador &jugadorActual, Jugador &jugadorAnterior, int cartaElegida, int cartaRival);
-void intercambioEntreJugadores(Jugador &jugadorActual, Jugador &jugadorAnterior);
 //  accion4
-void intercambiarCorralPropio(Jugador &jugadorActual);
+void accionarDado4(Jugador &jugadorActual);
 // accion5
-void bloquearCarta(Jugador &jugadorActual);
+void accionarDado5(Jugador &jugadorActual);
 
 // Sistema de puntuacion.
 void puntajeTotal(Jugador ganador);
@@ -63,3 +63,6 @@ int validarMano(Jugador jugador);
 bool validarSeleccionCarta(int cartaElegida);
 bool contarCantCartasBlock(Jugador jugador);
 bool validarCartaBloqueada(Jugador jugadorActual, int cartaElegida);
+
+// Resetear estados
+void resetearEstados(Jugador &jugador);
