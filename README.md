@@ -7,15 +7,15 @@ Fueron varias semanas de aprendizaje en donde pude consolidar lo aprendido duran
 
 ### Aprendizaje
 
-Para el desarrollo del proyecto utilicé nuevas herramientas como la librería `conio.h`  para el uso de getch(), algorithm para la función swap(), y cstdlib en complemento con time para generar números aleatorios.
+Para el desarrollo del proyecto utilicé nuevas herramientas como la librería `conio.h`  para el uso de **getch()**, `algorithms` para la función **swap()**, y `cstdlib` en complemento con `time` para generar números aleatorios.
 
-Utilicé el tipo de dato struct para crear plantillas con las características comunes que puede tener un juego de cartas (mazo, jugadores, acciones, etc.). A su vez, trabajé con funciones que me permitieron resolver las diferentes problemáticas del juego. Al pasar las rondas, las características del jugador (mano, acciones, etc.) se modifican, por lo cual, utilicé mucho el pasaje de estructuras, arrays y variables por referencia para poder trabajar con los valores originales y no con una copia.
+Utilicé el tipo de dato **struct** para crear plantillas con las características comunes que puede tener un juego de cartas (mazo, jugadores, acciones, etc.). A su vez, trabajé con funciones que me permitieron resolver las diferentes problemáticas del juego. Al pasar las rondas, las características del jugador (mano, acciones, etc.) se modifican, por lo cual, utilicé mucho el pasaje de estructuras, arrays y variables por referencia para poder trabajar con los valores originales y no con una copia.
 
 Aprendí la importancia de trabajar con variables, funciones y estructuras de ámbito local para tener un mejor control del flujo del programa y evitar errores que, a la larga, son difíciles de identificar.
 
 Trabajé con archivos de cabecera (header files) que ponen a disposición de cualquier archivo las variables, estructuras y funciones declaradas. También me permiten ordenar el código para facilitar su lectura.
 
-Durante el desarrollo aprendí a utilizar git y github para registrar el avance del proyecto y tener un backup de respaldo.
+Durante el desarrollo aprendí a utilizar **git** y **github** para registrar el avance del proyecto y tener un backup de respaldo.
 
 ## Juego Clutch
 
