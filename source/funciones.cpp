@@ -5,6 +5,9 @@
 
 using namespace std;
 
+const int SIZE_MAZO = 20;
+const int SIZE_MANO = 5;
+
 // Funcion main
 void jugarClutch(Jugador &jugador1, Jugador &jugador2, Mazo mazo[20])
 {
@@ -15,10 +18,8 @@ void jugarClutch(Jugador &jugador1, Jugador &jugador2, Mazo mazo[20])
 }
 
 // Menu
-int mostrarMenu()
+void mostrarMenu()
 {
-    int opcion;
-
     cout << "\n****** BIENVENIDO A CLUTCH ******\n";
     cout << "--------------------\n";
     cout << "1 - JUGAR \n";
@@ -27,48 +28,48 @@ int mostrarMenu()
     cout << "4 - INSTRUCCIONES\n";
     cout << "--------------------\n";
     cout << "0 - SALIR\n";
+}
+
+int pedirOpcionMenu()
+{
     cout << "Ingrese una opcion: ";
+    int opcion;
     cin >> opcion;
-    cout << endl;
 
     return opcion;
 }
 
 void menuPrincipal(Jugador &jugador1, Jugador &jugador2, Mazo mazo[20], string &nombreGanadorHistorico, int &puntosGanadorHistorico)
 {
-    int opcion = mostrarMenu();
+    mostrarMenu();
+    int opcion = pedirOpcionMenu();
 
     while (opcion < 0 || opcion > 4)
     {
-        cout << "ERROR! Opcion incorrecta. Intentelo nuevamente: \n";
-        opcion = mostrarMenu();
+        cout << "\nERROR! Opcion incorrecta. Intentelo nuevamente\n\n";
+        opcion = pedirOpcionMenu();
     }
 
     switch (opcion)
     {
     case 1:
         jugar(jugador1, jugador2, mazo, nombreGanadorHistorico, puntosGanadorHistorico);
-        volverAlMenu(jugador1, jugador2, mazo, nombreGanadorHistorico, puntosGanadorHistorico);
         break;
     case 2:
         mostrarEstadisticas(nombreGanadorHistorico, puntosGanadorHistorico);
-        volverAlMenu(jugador1, jugador2, mazo, nombreGanadorHistorico, puntosGanadorHistorico);
         break;
     case 3:
         mostrarCreditos();
-        volverAlMenu(jugador1, jugador2, mazo, nombreGanadorHistorico, puntosGanadorHistorico);
         break;
     case 4:
         mostrarInstrucciones();
-        volverAlMenu(jugador1, jugador2, mazo, nombreGanadorHistorico, puntosGanadorHistorico);
         break;
     case 0:
         cout << "Gracias por visitar CLUTCH!";
-        break;
-    default:
-        menuPrincipal(jugador1, jugador2, mazo, nombreGanadorHistorico, puntosGanadorHistorico);
+        return;
         break;
     }
+    volverAlMenu(jugador1, jugador2, mazo, nombreGanadorHistorico, puntosGanadorHistorico);
 }
 
 void mostrarEstadisticas(string nombreGanadorHistorico, int puntosGanadorHistorico)
@@ -107,7 +108,8 @@ void mostrarInstrucciones()
     cout << "\t #2 Robar del mazo e intercambiarla con una carta del contrario.\n";
     cout << "\t #3 Elegir una carta propia e intercambiarla con una del contrario.\n";
     cout << "\t #4 Intercambiar dos cartas del propio corral.\n";
-    cout << "\t #5 Bloquear una carta del propio corral. El contrario no podra accionar sobre esta carta. Si la carta esta bloqueada se muestra entre [].\n";
+    cout << "\t #5 Bloquear una carta del propio corral. El contrario no podra accionar sobre esta carta.\n";
+    cout << "\t     Si la carta esta bloqueada se muestra entre [].\n";
     cout << "\t #6 Elegir una opcion o pasar el turno.\n\n";
 
     cout << "El comienzo de la partida esta determinado por el jugador con mayor cantidad de ases(A). En el caso de que ningun jugador posea un as o la cantidad en ambos sea la misma, se evalua la cantidad del segundo tipo de carta, en este caso, la \'K\'. Esta regla se aplica para todos los tipos de cartas subsiguientes.\n";
@@ -118,29 +120,30 @@ void mostrarInstrucciones()
     cout << "-------------------------------------------------------------";
 }
 
+char confirmarUnaAccion()
+{
+    char confirmar;
+    cin >> confirmar;
+
+    return toupper(confirmar);
+}
+
 void volverAlMenu(Jugador jugador1, Jugador jugador2, Mazo mazo[20], string nombreGanadorHistorico, int puntosGanadorHistorico)
 {
-    char opcion;
-    cout << "\n\nDesea volver al menu principal? S(Si)/N(No): ";
-    cin >> opcion;
-    opcion = toupper(opcion);
 
-    if (opcion != 'S' && opcion != 'N')
+    cout << "\n\nDesea volver al menu principal? S(Si)/N(No): ";
+    char opcion = confirmarUnaAccion();
+
+    while (opcion != 'S' && opcion != 'N')
     {
         cout << "ERROR! La letra ingresada es incorrecta. Intentelo nuevamente: ";
-        cin >> opcion;
-        opcion = toupper(opcion);
+        opcion = confirmarUnaAccion();
     }
 
     if (opcion == 'S')
-    {
         menuPrincipal(jugador1, jugador2, mazo, nombreGanadorHistorico, puntosGanadorHistorico);
-    }
     else
-    {
-
         cout << "Gracias por visitar CLUTCH!";
-    }
 }
 
 // Datos de la ronda
@@ -157,11 +160,11 @@ void mostrarDatosRonda(Jugador jugador1, Jugador jugador2, int &ronda, string tu
 
 void pedirNombres(Jugador &jugador1, Jugador &jugador2)
 {
-    char confirma = 'N';
+    char confirmar = 'N';
 
-    while (confirma != 'S')
+    while (confirmar != 'S')
     {
-        cout << "---------------------------------------\n";
+        separador(50);
         cout << "#Registre los nombres de los jugadores: \n";
         cout << " Jugador 1: ";
         cin >> jugador1.nombre;
@@ -169,30 +172,32 @@ void pedirNombres(Jugador &jugador1, Jugador &jugador2)
         cin >> jugador2.nombre;
 
         cout << "#Confirma los nombres de usuario? S/N: ";
-        cin >> confirma;
-        confirma = toupper(confirma);
-        cout << "---------------------------------------\n\n";
+        confirmar = confirmarUnaAccion();
+        separador(50);
     }
 }
 
-// Funciones para el mazo y la mano
-void cargarMazo(Mazo mazo[20])
+/**
+ * Carga 4 grupos de 5 cartas (10,J,Q,K,A)
+ * Carga 4 palos unicos para cada carta
+ */
+void cargarMazo(Mazo mazo[])
 {
 
-    for (int j = 0; j < 20; j++)
+    for (int j = 0; j < SIZE_MAZO; j++)
     {
-        mazo[j].carta = TIPO_CARTA[j % 5];
+        mazo[j].carta = TIPO_CARTA[j % SIZE_MANO];
     }
 
-    for (int j = 0; j < 20; j++)
+    for (int j = 0; j < SIZE_MAZO; j++)
     {
         mazo[j].palo = V_PALOS[j % 4];
     }
 }
 
-void mostrarMazo(Mazo mazo[20])
+void mostrarMazo(Mazo mazo[])
 {
-    for (int i = 0; i < 20; i++)
+    for (int i = 0; i < SIZE_MAZO; i++)
     {
         cout << mazo[i].carta << mazo[i].palo << endl;
     }
@@ -200,45 +205,36 @@ void mostrarMazo(Mazo mazo[20])
     cout << endl;
 }
 
-void mezclarMazo(Mazo mazo[20])
+void mezclarMazo(Mazo mazo[])
 {
-    for (int i = 0; i < 20; i++)
+    for (int i = 0; i < SIZE_MAZO; i++)
     {
-        string auxCarta;
-        string auxPalo;
         int iCarta = generarIndice();
-
-        auxCarta = mazo[i].carta;
-        auxPalo = mazo[i].palo;
-
-        mazo[i].carta = mazo[iCarta].carta;
-        mazo[i].palo = mazo[iCarta].palo;
-
-        mazo[iCarta].carta = auxCarta;
-        mazo[iCarta].palo = auxPalo;
+        swap(mazo[i].carta, mazo[iCarta].carta);
+        swap(mazo[i].palo, mazo[iCarta].palo);
     }
 }
 
-void repartirCartas(Jugador &jugador, Mazo mazo[20]) //&jugador paso por referencia para modificar el valor original de la matriz
+void repartirCartas(Jugador &jugador, Mazo mazo[])
 {
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < SIZE_MANO; i++)
     {
         int iCarta = generarIndice();
 
-        while (mazo[iCarta].carta == "0") // Si el elemento es =0 esa carta ya se entrego.
+        while (mazo[iCarta].carta == "0")
         {
             iCarta = generarIndice();
         }
+        swap(jugador.mano[i].carta, mazo[iCarta].carta);
+        swap(jugador.mano[i].palo, mazo[iCarta].palo);
 
-        jugador.mano[i].carta = mazo[iCarta].carta;
-        jugador.mano[i].palo = mazo[iCarta].palo;
+        mazo[iCarta].carta = "0";
+        mazo[iCarta].palo = "0";
 
-        mazo[iCarta].carta = "0"; // Los elementos en las posiciones correspondientes se "eliminan" del mazo.
-        mazo[iCarta].palo = "0";  // Los elementos en las posiciones correspondientes se "eliminan" del mazo.
-    }
-    if (validarMano(jugador) == 5) // Si la mano esta ordenada se vuelve a repartir.
-    {
-        repartirCartas(jugador, mazo);
+        if (validarOrdenMano(jugador))
+        {
+            repartirCartas(jugador, mazo);
+        }
     }
 }
 
@@ -428,7 +424,7 @@ void accionarSegunDado(Jugador &jugadorActual, Jugador &jugadorAnterior, Mazo ma
 
 bool encontrarGanador(Jugador &jugadorActual, Jugador &jugadorAnterior, bool &existeGanador, string &nombreGanadorHistorico, int &puntosGanadorHistorico)
 {
-    if (validarMano(jugadorActual) == 5)
+    if (validarOrdenMano(jugadorActual))
     {
         jugadorActual.puntos[0] = 15; // Puntos por ganar la partida
 
@@ -586,8 +582,8 @@ void intercambiarEntreCorral(Jugador &jugadorActual, Jugador &jugadorAnterior, i
     jugadorAnterior.mano[cartaRival].carta = auxCarta;
     jugadorAnterior.mano[cartaRival].palo = auxPalo;
 
-    // Si validarMano devuelve 5, encontramos el ganador. Sumamos 10 puntos por ganar intercambiando la carta rival.
-    if (validarMano(jugadorActual) == 5)
+    // Si contarCartasOrdenadas devuelve 5, encontramos el ganador. Sumamos 10 puntos por ganar intercambiando la carta rival.
+    if (validarOrdenMano(jugadorActual))
     {
         jugadorActual.puntos[1] = 10;
     }
@@ -666,13 +662,12 @@ void contarCartaMalUbicada(Jugador &jugadorActual, Jugador &jugadorAnterior)
     jugadorActual.puntos[2] = contPuntos;
 }
 
-// Generadores de numeros aleatorios (dado, indices).
+/**
+ * Genera un indice para el mazo.
+ */
 int generarIndice()
 {
-
-    int indice = rand() % 19; // Genera un indice para un array, por eso los valores van de 0 a 19 inclusive.
-
-    return indice;
+    return rand() % 19;
 }
 
 int tirarDado()
@@ -681,23 +676,31 @@ int tirarDado()
     return dado;
 }
 
-// Validaciones
-int validarMano(Jugador jugador)
+/**
+ * Cuenta la cantidad de cartas ordenadas.
+ */
+int contarCartasOrdenadas(Jugador jugador)
 {
     int cont = 0;
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < SIZE_MANO; i++)
     {
-        if (jugador.mano[i].carta == TIPO_CARTA[i]) // si el orden de las cartas en la mano es igual al orden en TIPO_CARTA la mano esta ordenado.
-        {
+        if (jugador.mano[i].carta == TIPO_CARTA[i])
             cont++;
-        }
         else
-        {
             cont = 0;
-        }
     }
-
     return cont;
+}
+
+/**
+ * Valida la cantidad de cartas ordenadas.
+ */
+bool validarOrdenMano(Jugador jugador)
+{
+    if (contarCartasOrdenadas(jugador) == 5)
+        return true;
+
+    return false;
 }
 
 bool validarCartaBloqueada(Jugador jugadorActual, int cartaElegida)
@@ -753,4 +756,14 @@ void resetearEstados(Jugador &jugador)
 
     jugador.accion.pasoTurno = false;
     jugador.accion.sufrioRobo = false;
+}
+
+void separador(int tamaño, const char symbol)
+{
+    for (int i = 0; i < tamaño; i++)
+    {
+        cout << symbol;
+    }
+
+    cout << endl;
 }

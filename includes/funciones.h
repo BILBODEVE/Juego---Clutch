@@ -4,7 +4,9 @@
 // Funcion main.
 void jugarClutch(Jugador &jugador1, Jugador &jugador2, Mazo mazo[20]);
 // Menu.
-int mostrarMenu();
+void mostrarMenu();
+int pedirOpcionMenu();
+char confirmarUnaAccion();
 void menuPrincipal(Jugador &jugador1, Jugador &jugador2, Mazo mazo[20], std::string &nombreGanadorHistorico, int &puntosGanadorHistorico);
 void volverAlMenu(Jugador jugador1, Jugador jugador2, Mazo mazo[20], std::string nombreGanadorHistorico, int puntosGanadorHistorico);
 // Estadistica.
@@ -59,10 +61,14 @@ int tirarDado();
 int generarIndice();
 
 // Validaciones
-int validarMano(Jugador jugador);
+bool validarOrdenMano(Jugador jugador);
+int contarCartasOrdenadas(Jugador Jugador);
 bool validarSeleccionCarta(int cartaElegida);
 bool contarCantCartasBlock(Jugador jugador);
 bool validarCartaBloqueada(Jugador jugadorActual, int cartaElegida);
 
 // Resetear estados
 void resetearEstados(Jugador &jugador);
+
+// Separadores
+void separador(int tamaño, const char symbol = '-');
