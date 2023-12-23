@@ -7,7 +7,7 @@ Fueron varias semanas de aprendizaje en donde pude consolidar lo aprendido duran
 
 ### Aprendizaje
 
-Para el desarrollo del proyecto utilicé nuevas herramientas como la librería ''conio.h'' para el uso de getch(), algorithm para la función swap(), y cstdlib en complemento con time para generar números aleatorios.
+Para el desarrollo del proyecto utilicé nuevas herramientas como la librería 'conio.h' para el uso de getch(), algorithm para la función swap(), y cstdlib en complemento con time para generar números aleatorios.
 
 Utilicé el tipo de dato struct para crear plantillas con las características comunes que puede tener un juego de cartas (mazo, jugadores, acciones, etc.). A su vez, trabajé con funciones que me permitieron resolver las diferentes problemáticas del juego. Al pasar las rondas, las características del jugador (mano, acciones, etc.) se modifican, por lo cual, utilicé mucho el pasaje de estructuras, arrays y variables por referencia para poder trabajar con los valores originales y no con una copia.
 
