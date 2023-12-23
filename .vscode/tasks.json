@@ -8,8 +8,10 @@
                 "-fdiagnostics-color=always",
                 "-g",
                 "*.cpp",
+                "${workspaceFolder}\\source\\*.cpp",
                 "-o",
-                "${fileDirname}\\${fileBasenameNoExtension}.exe"
+                "${fileDirname}\\${fileBasenameNoExtension}.exe",
+                "-I\\${workspaceFolder}\\includes",
             ],
             "options": {
                 "cwd": "${fileDirname}"

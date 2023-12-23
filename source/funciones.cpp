@@ -1,7 +1,7 @@
 #include <iostream>
 #include <conio.h>   // getch()
 #include <algorithm> // swap()
-#include "headers/funciones.h"
+#include "../includes/funciones.h"
 
 using namespace std;
 
@@ -48,15 +48,19 @@ void menuPrincipal(Jugador &jugador1, Jugador &jugador2, Mazo mazo[20], string &
     {
     case 1:
         jugar(jugador1, jugador2, mazo, nombreGanadorHistorico, puntosGanadorHistorico);
+        volverAlMenu(jugador1, jugador2, mazo, nombreGanadorHistorico, puntosGanadorHistorico);
         break;
     case 2:
         mostrarEstadisticas(nombreGanadorHistorico, puntosGanadorHistorico);
+        volverAlMenu(jugador1, jugador2, mazo, nombreGanadorHistorico, puntosGanadorHistorico);
         break;
     case 3:
         mostrarCreditos();
+        volverAlMenu(jugador1, jugador2, mazo, nombreGanadorHistorico, puntosGanadorHistorico);
         break;
     case 4:
         mostrarInstrucciones();
+        volverAlMenu(jugador1, jugador2, mazo, nombreGanadorHistorico, puntosGanadorHistorico);
         break;
     case 0:
         cout << "Gracias por visitar CLUTCH!";
@@ -65,7 +69,6 @@ void menuPrincipal(Jugador &jugador1, Jugador &jugador2, Mazo mazo[20], string &
         menuPrincipal(jugador1, jugador2, mazo, nombreGanadorHistorico, puntosGanadorHistorico);
         break;
     }
-    volverAlMenu(jugador1, jugador2, mazo, nombreGanadorHistorico, puntosGanadorHistorico);
 }
 
 void mostrarEstadisticas(string nombreGanadorHistorico, int puntosGanadorHistorico)
