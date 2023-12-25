@@ -1,39 +1,40 @@
 #pragma once
 #include "estructuras.h"
 
-void jugarClutch(Jugador &jugador1, Jugador &jugador2, Mazo mazo[20]);
+void jugarClutch(Jugador &jugador1, Jugador &jugador2, Carta mazo[20]);
 void mostrarMenu();
 int pedirOpcionMenu();
 char confirmarUnaAccion();
-void menuPrincipal(Jugador &jugador1, Jugador &jugador2, Mazo mazo[20], std::string &nombreGanadorHistorico, int &puntosGanadorHistorico);
-void volverAlMenu(Jugador jugador1, Jugador jugador2, Mazo mazo[20], std::string nombreGanadorHistorico, int puntosGanadorHistorico);
+void menuPrincipal(Jugador &jugador1, Jugador &jugador2, Carta mazo[20], std::string &nombreGanadorHistorico, int &puntosGanadorHistorico);
+void volverAlMenu(Jugador jugador1, Jugador jugador2, Carta mazo[20], std::string nombreGanadorHistorico, int puntosGanadorHistorico);
 void mostrarEstadisticas(std::string nombreGanadorHistorico, int puntosGanadorHistorico);
 void mostrarCreditos();
 void mostrarInstrucciones();
 
-void cargarMazo(Mazo mazo[20]);
-void mezclarMazo(Mazo mazo[20]);
-void mostrarMazo(Mazo mazo[20]);
-void repartirCartas(Jugador &jugador, Mazo mazo[20]);
+void cargarCarta(Carta mazo[20]);
+void mezclarCarta(Carta mazo[20]);
+void mostrarCarta(Carta mazo[20]);
+void repartirCartas(Jugador &jugador, Carta mazo[20]);
 void mostrarMano(Jugador jugador1, Jugador jugador2);
 
-void jugar(Jugador &jugador1, Jugador &jugador2, Mazo mazo[20], std::string &nombreGanadorHistorico, int &puntosGanadorHistorico);
+void jugar(Jugador &jugador1, Jugador &jugador2, Carta mazo[20], std::string &nombreGanadorHistorico, int &puntosGanadorHistorico);
 void mostrarDatosRonda(Jugador jugador1, Jugador jugador2, int &ronda, std::string turno);
-void pedirNombres(Jugador &jugador1, Jugador &jugador2);
+void solicitarUnNombre(Jugador &jugador, int nro_jugador);
+void registrarNombres(Jugador &jugador1, Jugador &jugador2);
 std::string buscarPrimerTurno(Jugador &jugador1, Jugador &jugador2, std::string &turno);
 int contarCartaDeUnTipo(Jugador jugador, std::string carta);
-void ejecutarRondas(Jugador &jugador1, Jugador &jugador2, Mazo mazo[20], std::string &turno, bool &existeGanador, std::string &nombreGanadorHistorico, int &puntosGanadorHistorico);
+void ejecutarRondas(Jugador &jugador1, Jugador &jugador2, Carta mazo[20], std::string &turno, bool &existeGanador, std::string &nombreGanadorHistorico, int &puntosGanadorHistorico);
 bool encontrarGanador(Jugador &jugadorActual, Jugador &jugadorAnterior, bool &existeGanador, std::string &nombreGanadorHistorico, int &puntosGanadorHistorico);
 void mostrarGanador(Jugador jugador);
 void calcularGanadorHistorico(Jugador jugador, std::string &nombreGanadorHistorico, int &puntosGanadorHistorico);
 
-void accionarSegunDado(Jugador &jugador1, Jugador &jugador2, Mazo mazo[20]);
+void accionarSegunDado(Jugador &jugador1, Jugador &jugador2, Carta mazo[20]);
 
 int seleccionarCarta();
-int robarDelMazo(Mazo mazo[20]);
-void intercambiarConElMazo(Jugador &jugador, int cartaElegida, Mazo mazo[20]);
-void accionarDado1(Jugador &jugadorActual, Mazo mazo[20]);
-void accionarDado2(Jugador &jugadorAnterior, Mazo mazo[20]);
+int robarDelCarta(Carta mazo[20]);
+void intercambiarConElCarta(Jugador &jugador, int cartaElegida, Carta mazo[20]);
+void accionarDado1(Jugador &jugadorActual, Carta mazo[20]);
+void accionarDado2(Jugador &jugadorAnterior, Carta mazo[20]);
 void accionarDado3(Jugador &jugadorActual, Jugador &jugadorAnterior);
 void intercambiarEntreJugadores(Jugador &jugadorActual, Jugador &jugadorAnterior, int cartaElegida, int cartaRival);
 void accionarDado4(Jugador &jugadorActual);
@@ -52,6 +53,7 @@ int contarCartasOrdenadas(Jugador Jugador);
 bool validarSeleccionCarta(int cartaElegida);
 bool validarCartasBlock(Jugador jugador);
 bool estaBloqueada(Jugador jugadorActual, int cartaElegida);
+bool validarCantidadChar(std::string nombre);
 
 void resetearEstados(Jugador &jugador);
 

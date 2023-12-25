@@ -10,7 +10,7 @@ int main()
 {
     srand(time(0));
 
-    Mazo mazo[20];
+    Carta mazo[20];
     Jugador jugador1;
     Jugador jugador2;
 
