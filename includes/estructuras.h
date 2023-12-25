@@ -1,25 +1,29 @@
 #pragma once
 
-struct Mazo
+struct Carta
 {
     std::string carta;
     std::string palo;
 };
 
-struct Acciones
+struct Jugador
 {
+    std::string nombre;
+
+    Carta mano[5];
+    // enum Puntos
+    // {
+    //     GANAR = 0,
+    //     GANAR_ROBANDO = 0,
+    //     CARTAS_MAL_UBICADAS = 0,
+    //     POR_PASAR_TURNO = 0,
+    //     POR_SUFRIR_ROBO = 0
+    // };
+    int puntos[5] = {};
     bool cartaBlock[5] = {};
     bool pasoTurno = false;
     bool sufrioRobo = false;
 };
 
-struct Jugador
-{
-    std::string nombre;
-    Mazo mano[5];
-    Acciones accion;
-    int puntos[5] = {}; // Los indices se correlacionan con el orden en el que se describe el valor de los puntajes en la consigna.
-};
-
-const std::string CARTA[5] = {"10", "J", "Q", "K", "A"};
+const std::string CARTAS[5] = {"10", "J", "Q", "K", "A"};
 const std::string PALOS[4] = {"\u2665", "\u2663", "\u2660", "\u2666"}; // corazon,trebol,pica,diamante.
