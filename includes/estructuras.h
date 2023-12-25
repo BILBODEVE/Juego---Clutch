@@ -6,20 +6,20 @@ struct Carta
     std::string palo;
 };
 
+enum Puntajes{
+    GANAR,
+    GANAR_ROBANDO = 0,
+    CARTA_MAL_UBICADA = 0,
+    POR_PASAR_TURNO = 0,
+    POR_SUFRIR_ROBO = 0
+};
+
 struct Jugador
 {
     std::string nombre;
 
     Carta mano[5];
-    // enum Puntos
-    // {
-    //     GANAR = 0,
-    //     GANAR_ROBANDO = 0,
-    //     CARTAS_MAL_UBICADAS = 0,
-    //     POR_PASAR_TURNO = 0,
-    //     POR_SUFRIR_ROBO = 0
-    // };
-    int puntos[5] = {};
+    Puntajes puntos[5];
     bool cartaBlock[5] = {};
     bool pasoTurno = false;
     bool sufrioRobo = false;

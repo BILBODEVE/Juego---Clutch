@@ -38,7 +38,7 @@ void accionarDado2(Jugador &jugadorAnterior, Carta mazo[20]);
 void accionarDado3(Jugador &jugadorActual, Jugador &jugadorAnterior);
 void intercambiarEntreJugadores(Jugador &jugadorActual, Jugador &jugadorAnterior, int cartaElegida, int cartaRival);
 void accionarDado4(Jugador &jugadorActual);
-void bloquearUnaCarta(Jugador &jugadorActual);
+void accionarDado5(Jugador &jugadorActual);
 
 void puntajeTotal(Jugador ganador);
 int contarCartaMalUbicada(Jugador jugadorAnterior);

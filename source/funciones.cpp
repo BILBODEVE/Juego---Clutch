@@ -8,6 +8,11 @@ using namespace std;
 
 const int SIZE_MAZO = 20;
 const int SIZE_MANO = 5;
+const Puntajes PUNTOS_VICTORIA = (Puntajes)15;
+const Puntajes PUNTOS_VICTORIA_CON_ROBO = (Puntajes)10;
+const Puntajes PUNTOS_CARTA_DESORDENADA = (Puntajes)5;
+const Puntajes PUNTOS_SUFRIR_ROBO = (Puntajes)5;
+const Puntajes PUNTOS_PASAR_TURNO = (Puntajes)10;
 
 // Funcion main
 void jugarClutch(Jugador &jugador1, Jugador &jugador2, Carta mazo[])
@@ -164,10 +169,11 @@ void registrarNombres(Jugador &jugador1, Jugador &jugador2)
 {
     char confirmar = 'N';
 
+    cin.ignore();
+
     while (confirmar != 'S')
     {
         separador(50);
-        cin.ignore();
         cout << "#Registre los nombres de los jugadores: \n";
 
         solicitarUnNombre(jugador1, 1);
@@ -181,7 +187,7 @@ void registrarNombres(Jugador &jugador1, Jugador &jugador2)
         while(validarCantidadChar(jugador2.nombre))
         {
             cout << "ERROR! El nombre no debe superar los 20 caracteres. Intentelo nuevamente.\n";
-            solicitarUnNombre(jugador1,1);
+            solicitarUnNombre(jugador2,2);
         }
 
         cout << "#Confirma los nombres de usuario? S/N: ";
@@ -384,12 +390,12 @@ string buscarPrimerTurno(Jugador &jugador1, Jugador &jugador2, string &turno)
 
 void accionarSegunDado(Jugador &jugadorActual, Jugador &jugadorAnterior, Carta mazo[20])
 {
-    cout << "Presione enter para tirar el dado: ";
-    getch();
-    cout << "\n\n";
 
+    cout << "Presione enter para tirar el dado...";
+    getch();
+    
     int valor_dado = tirarDado();
-    cout << "Valor del dado: " << valor_dado << endl;
+    cout << "\nValor del dado: " << valor_dado << endl;
 
     if (valor_dado == 6)
     {
@@ -402,7 +408,7 @@ void accionarSegunDado(Jugador &jugadorActual, Jugador &jugadorAnterior, Carta m
         cout << "\t #4 Intercambiar dos cartas del propio corral.\n";
         cout << "\t #5 Bloquear una carta del propio corral. El contrario no podra accionar sobre esta carta.\n";
         cout << "\t     Si la carta esta bloqueada se muestra entre [].\n";
-        cout << "\t #6 Elegir una opcion o pasar el turno.\n\n";
+        cout << "\t #6 Elegir una opcion o pasar el turno.\n";
         separador(50);
 
         valor_dado = pedirOpcion();
@@ -411,7 +417,7 @@ void accionarSegunDado(Jugador &jugadorActual, Jugador &jugadorAnterior, Carta m
             cout << "Valor incorrecto!Intentelo nuevamente\n";
             valor_dado = pedirOpcion();
         }
-        cout << endl;
+        
     }
 
     switch (valor_dado)
@@ -435,7 +441,7 @@ void accionarSegunDado(Jugador &jugadorActual, Jugador &jugadorAnterior, Carta m
             accionarSegunDado(jugadorActual, jugadorAnterior, mazo);
         }
         else 
-            bloquearUnaCarta(jugadorActual);
+            accionarDado5(jugadorActual);
         break;
     case 0:
         jugadorActual.pasoTurno = true;
@@ -449,16 +455,16 @@ bool encontrarGanador(Jugador &jugadorActual, Jugador &jugadorAnterior, bool &ex
 {
     if (validarOrdenMano(jugadorActual))
     {
-        jugadorActual.puntos[0] = 15;
+        jugadorActual.puntos[GANAR] = PUNTOS_VICTORIA;
 
         cout << "PARTIDA FINALIZADA!! EL GANADOR ES: " << jugadorActual.nombre << endl;
         mostrarMano(jugadorActual, jugadorAnterior);
         sumarPuntosPorCartaDesordenada(jugadorActual, jugadorAnterior);
 
         if (!jugadorActual.pasoTurno)
-            jugadorActual.puntos[3] = 10;
+            jugadorActual.puntos[POR_PASAR_TURNO] = PUNTOS_PASAR_TURNO;
         if (!jugadorActual.sufrioRobo)
-            jugadorActual.puntos[4] = 5;
+            jugadorActual.puntos[POR_SUFRIR_ROBO] = PUNTOS_SUFRIR_ROBO;
 
         mostrarGanador(jugadorActual);
         calcularGanadorHistorico(jugadorActual, nombreGanadorHistorico, puntosGanadorHistorico);
@@ -473,11 +479,11 @@ void mostrarGanador(Jugador jugador)
 {
     cout << "PUNTAJE: \n";
     cout << "-------------------------------------------\n";
-    cout << "Ganar la partida: " << jugador.puntos[0] << endl;
-    cout << "Robo ultima carta al jugador rival: " << jugador.puntos[1] << endl;
-    cout << "Cartas mal ubicadas del rival " << jugador.puntos[2] / 5 << ": " << jugador.puntos[2] << endl;
-    cout << "Sin pasar de turno: " << jugador.puntos[3] << endl;
-    cout << "Sin haber sufrido robos: " << jugador.puntos[4] << endl;
+    cout << "Ganar la partida: " << jugador.puntos[GANAR] << endl;
+    cout << "Robo ultima carta al jugador rival: " << jugador.puntos[GANAR_ROBANDO] << endl;
+    cout << "Cartas mal ubicadas del rival " << jugador.puntos[CARTA_MAL_UBICADA] / 5 << ": " << jugador.puntos[CARTA_MAL_UBICADA] << endl;
+    cout << "Sin pasar de turno: " << jugador.puntos[POR_PASAR_TURNO] << endl;
+    cout << "Sin haber sufrido robos: " << jugador.puntos[POR_SUFRIR_ROBO] << endl;
     cout << "-------------------------------------------\n";
     cout << "TOTAL: " << sumarTotalPuntos(jugador);
 }
@@ -531,12 +537,16 @@ void intercambiarConElCarta(Jugador &jugador, int cartaElegida, Carta mazo[])
     swap(jugador.mano[cartaElegida].palo,mazo[cartaDelCarta].palo);
 }
 
+/**
+ * Robar una carta del mazo.
+ * Intercambiar con una carta propia.
+*/
 void accionarDado1(Jugador &jugadorActual, Carta mazo[])
 {
-    cout << "Robar del mazo e intercambiar con una carta del corral(1 a 5).\n\n";
+    cout << "\nRobar del mazo e intercambiar con una carta del corral(1 a 5).\n";
     cout << "Seleccione una carta (1 a 5): ";
     int cartaElegida = seleccionarCarta();
-    cout << "#Presione enter para robar del mazo: ";
+    cout << "#Presione enter para robar del mazo...";
     getch();
     cout << endl;
 
@@ -546,9 +556,13 @@ void accionarDado1(Jugador &jugadorActual, Carta mazo[])
     intercambiarConElCarta(jugadorActual, cartaElegida, mazo);
 }
 
+/**
+ * Robar una carta del mazo.
+ * Intercambiarla con una del rival.
+*/
 void accionarDado2(Jugador &jugadorAnterior, Carta mazo[])
 {
-    cout << "Robar del mazo e intercambiarla con una carta del contrario.\n\n";
+    cout << "\nRobar del mazo e intercambiarla con una carta del contrario.\n";
     cout << "Seleccione la carta del rival (1 a 5): ";
     int cartaElegida = seleccionarCarta();
 
@@ -561,9 +575,12 @@ void accionarDado2(Jugador &jugadorAnterior, Carta mazo[])
     intercambiarConElCarta(jugadorAnterior, cartaElegida, mazo);
 }
 
+/**
+ * Intercambio entre jugadores.
+*/
 void accionarDado3(Jugador &jugadorActual, Jugador &jugadorAnterior)
 {
-    cout << "Elegir una carta propia e intercambiarla con una del contrario.\n\n";
+    cout << "\nElegir una carta propia e intercambiarla con una del contrario.\n";
     cout << "Seleccione una carta de su corral (1 a 5): ";
     int cartaElegida = seleccionarCarta();
     cout << "Seleccione una carta del corral contrario (1 a 5): ";
@@ -592,14 +609,17 @@ void intercambiarEntreJugadores(Jugador &jugadorActual, Jugador &jugadorAnterior
         jugadorActual.cartaBlock[cartaElegida] = false;
 
     if (validarOrdenMano(jugadorActual))
-        jugadorActual.puntos[1] = 10;
+        jugadorActual.puntos[GANAR_ROBANDO] = PUNTOS_VICTORIA_CON_ROBO;
 
     jugadorAnterior.sufrioRobo = true;
 }
 
+/**
+ * Intercambio entre cartas propias.
+*/
 void accionarDado4(Jugador &jugadorActual)
 {
-    cout << "Intercambiar dos cartas del propio corral.\n\n";
+    cout << "\nIntercambiar dos cartas del propio corral.\n";
     cout << "Seleccione la primer carta (1 a 5): ";
     int cartaElegida1 = seleccionarCarta();
     cout << "Seleccione la segunda carta (1 a 5): ";
@@ -619,9 +639,12 @@ void accionarDado4(Jugador &jugadorActual)
     swap(jugadorActual.mano[cartaElegida1].palo, jugadorActual.mano[cartaElegida2].palo);
 }
 
-void bloquearUnaCarta(Jugador &jugadorActual)
+/**
+ * Bloquear una carta propia.
+*/
+void accionarDado5(Jugador &jugadorActual)
 {
-    cout << "Bloquear una carta del propio corral. El contrario no podra accionar sobre esta carta.\n\n";
+    cout << "\nBloquear una carta del propio corral. El contrario no podra accionar sobre esta carta.\n";
     cout << "Seleccione la carta que desea bloquear (1 a 5): ";
     int cartaElegida = seleccionarCarta();
     while(jugadorActual.cartaBlock[cartaElegida])
@@ -658,7 +681,8 @@ int contarCartaMalUbicada(Jugador jugadorAnterior)
 
 void sumarPuntosPorCartaDesordenada(Jugador &jugadorActual, Jugador jugadorAnterior)
 {
-    jugadorActual.puntos[2] = contarCartaMalUbicada(jugadorAnterior) * 5;
+    int total = contarCartaMalUbicada(jugadorAnterior) * PUNTOS_CARTA_DESORDENADA;
+    jugadorActual.puntos[CARTA_MAL_UBICADA] = (Puntajes)total;
 }
 
 /**
@@ -745,11 +769,6 @@ bool validarSeleccionCarta(int cartaElegida)
 */
 bool validarCantidadChar(string nombre)
 {
-
-    while(nombre.size() > 20)
-    {
-
-    }
     return nombre.size() > 20;
 }
 
