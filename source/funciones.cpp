@@ -1,6 +1,6 @@
 #include <iostream>
-#include <conio.h>   // getch()
-#include <algorithm> // swap()
+#include <conio.h>   
+#include <algorithm> 
 #include <string>
 #include "../includes/funciones.h"
 
@@ -8,13 +8,13 @@ using namespace std;
 
 const int SIZE_MAZO = 20;
 const int SIZE_MANO = 5;
-const Puntajes PUNTOS_VICTORIA = (Puntajes)15;
-const Puntajes PUNTOS_VICTORIA_CON_ROBO = (Puntajes)10;
-const Puntajes PUNTOS_CARTA_DESORDENADA = (Puntajes)5;
-const Puntajes PUNTOS_SUFRIR_ROBO = (Puntajes)5;
-const Puntajes PUNTOS_PASAR_TURNO = (Puntajes)10;
+const int PUNTOS_VICTORIA = 15;
+const int PUNTOS_VICTORIA_CON_ROBO = 10;
+const int PUNTOS_CARTA_DESORDENADA = 5;
+const int PUNTOS_SUFRIR_ROBO = 5;
+const int PUNTOS_PASAR_TURNO = 10;
 
-// Funcion main
+
 void jugarClutch(Jugador &jugador1, Jugador &jugador2, Carta mazo[])
 {
     string nombreGanadorHistorico;
@@ -23,7 +23,6 @@ void jugarClutch(Jugador &jugador1, Jugador &jugador2, Carta mazo[])
     menuPrincipal(jugador1, jugador2, mazo, nombreGanadorHistorico, puntosGanadorHistorico);
 }
 
-// Menu
 void mostrarMenu()
 {
     cout << "\n****** BIENVENIDO A CLUTCH ******\n";
@@ -36,7 +35,7 @@ void mostrarMenu()
     cout << "0 - SALIR\n";
 }
 
-int pedirOpcion()
+int solicitarNumero()
 {
     cout << "Ingrese una opcion: ";
     int opcion;
@@ -48,12 +47,12 @@ int pedirOpcion()
 void menuPrincipal(Jugador &jugador1, Jugador &jugador2, Carta mazo[], string &nombreGanadorHistorico, int &puntosGanadorHistorico)
 {
     mostrarMenu();
-    int opcion = pedirOpcion();
+    int opcion = solicitarNumero();
 
     while (opcion < 0 || opcion > 4)
     {
         cout << "\nERROR! Opcion incorrecta. Intentelo nuevamente\n\n";
-        opcion = pedirOpcion();
+        opcion = solicitarNumero();
     }
 
     switch (opcion)
@@ -127,25 +126,25 @@ void mostrarInstrucciones()
     
 }
 
-char confirmarUnaAccion()
+char pedirOpcion()
 {
-    char confirmar;
-    cin >> confirmar;
+    char opcion;
 
-    return toupper(confirmar);
+    do
+    {
+        cout << "\nDesea volver al menu principal? S(Si)/N(No): ";
+        cin >> opcion;
+        opcion = toupper(opcion);
+    } while (validarOpcion(opcion));
+    
+
+    return opcion;
 }
 
 void volverAlMenu(Jugador jugador1, Jugador jugador2, Carta mazo[], string nombreGanadorHistorico, int puntosGanadorHistorico)
 {
 
-    cout << "\n\nDesea volver al menu principal? S(Si)/N(No): ";
-    char opcion = confirmarUnaAccion();
-
-    while (opcion != 'S' && opcion != 'N')
-    {
-        cout << "ERROR! La letra ingresada es incorrecta. Intentelo nuevamente: ";
-        opcion = confirmarUnaAccion();
-    }
+    char opcion = pedirOpcion();
 
     if (opcion == 'S')
         menuPrincipal(jugador1, jugador2, mazo, nombreGanadorHistorico, puntosGanadorHistorico);
@@ -153,7 +152,6 @@ void volverAlMenu(Jugador jugador1, Jugador jugador2, Carta mazo[], string nombr
         cout << "Gracias por visitar CLUTCH!";
 }
 
-// Datos de la ronda
 void mostrarDatosRonda(Jugador jugador1, Jugador jugador2, int &ronda, string turno)
 {
     cout << "Ronda: " << ronda++ << endl;
@@ -191,7 +189,7 @@ void registrarNombres(Jugador &jugador1, Jugador &jugador2)
         }
 
         cout << "#Confirma los nombres de usuario? S/N: ";
-        confirmar = confirmarUnaAccion();
+        confirmar = pedirOpcion();
         separador(50);
     }
 }
@@ -200,7 +198,7 @@ void registrarNombres(Jugador &jugador1, Jugador &jugador2)
  * Carga 4 grupos de 5 cartas (10,J,Q,K,A)
  * Carga 4 palos unicos para cada carta
  */
-void cargarCarta(Carta mazo[])
+void cargarMazo(Carta mazo[])
 {
 
     for (int j = 0; j < SIZE_MAZO; j++)
@@ -224,7 +222,7 @@ void mostrarCarta(Carta mazo[])
     cout << endl;
 }
 
-void mezclarCarta(Carta mazo[])
+void mezclarMazo(Carta mazo[])
 {
     for (int i = 0; i < SIZE_MAZO; i++)
     {
@@ -293,15 +291,14 @@ void mostrarMano(Jugador jugador1, Jugador jugador2)
     cout << "\n--------------------------\n";
 }
 
-// funciones para le desarrollo de la partida
 void jugar(Jugador &jugador1, Jugador &jugador2, Carta mazo[20], string &nombreGanadorHistorico, int &puntosGanadorHistorico)
 {
     bool existeGanador = false;
     int ronda = 1;
     string turno;
 
-    cargarCarta(mazo);
-    mezclarCarta(mazo);
+    cargarMazo(mazo);
+    mezclarMazo(mazo);
     registrarNombres(jugador1, jugador2);
     repartirCartas(jugador1, mazo);
     repartirCartas(jugador2, mazo);
@@ -313,10 +310,8 @@ void jugar(Jugador &jugador1, Jugador &jugador2, Carta mazo[20], string &nombreG
     {
         mostrarDatosRonda(jugador1, jugador2, ronda, turno);
         ejecutarRondas(jugador1, jugador2, mazo, turno, existeGanador, nombreGanadorHistorico, puntosGanadorHistorico);
-        mezclarCarta(mazo);
+        mezclarMazo(mazo);
     }
-
-    // Si los jugadores anteriores pasaron de turno, recibieron un robo del contrario o tiene cartas bloqueadas reseteo los estados a false para la siguiente partida(solo aplica cuando se juegan mas de una partida en la misma ejecucion).
     resetearEstados(jugador1);
     resetearEstados(jugador2);
 }
@@ -325,13 +320,13 @@ void ejecutarRondas(Jugador &jugador1, Jugador &jugador2, Carta mazo[20], string
 {
     if (turno == jugador1.nombre)
     {
-        accionarSegunDado(jugador1, jugador2, mazo);
+        accionarSegunDado(jugador1, jugador2, mazo, existeGanador, nombreGanadorHistorico, puntosGanadorHistorico);
         encontrarGanador(jugador1, jugador2, existeGanador, nombreGanadorHistorico, puntosGanadorHistorico);
         turno = jugador2.nombre;
     }
     else
     {
-        accionarSegunDado(jugador2, jugador1, mazo);
+        accionarSegunDado(jugador2, jugador1, mazo, existeGanador, nombreGanadorHistorico, puntosGanadorHistorico);
         encontrarGanador(jugador2, jugador1, existeGanador, nombreGanadorHistorico, puntosGanadorHistorico);
         turno = jugador1.nombre;
     }
@@ -388,7 +383,7 @@ string buscarPrimerTurno(Jugador &jugador1, Jugador &jugador2, string &turno)
     return turno;
 }
 
-void accionarSegunDado(Jugador &jugadorActual, Jugador &jugadorAnterior, Carta mazo[20])
+void accionarSegunDado(Jugador &jugadorActual, Jugador &jugadorAnterior, Carta mazo[20],bool &existeGanador, string &nombreGanadorHistorico, int &puntosGanadorHistorico)
 {
 
     cout << "Presione enter para tirar el dado...";
@@ -411,11 +406,11 @@ void accionarSegunDado(Jugador &jugadorActual, Jugador &jugadorAnterior, Carta m
         cout << "\t #6 Elegir una opcion o pasar el turno.\n";
         separador(50);
 
-        valor_dado = pedirOpcion();
+        valor_dado = solicitarNumero();
         while (valor_dado < 1 || valor_dado > 5)
         {
             cout << "Valor incorrecto!Intentelo nuevamente\n";
-            valor_dado = pedirOpcion();
+            valor_dado = solicitarNumero();
         }
         
     }
@@ -426,10 +421,20 @@ void accionarSegunDado(Jugador &jugadorActual, Jugador &jugadorAnterior, Carta m
         accionarDado1(jugadorActual, mazo);
         break;
     case 2:
-        accionarDado2(jugadorAnterior, mazo);
+        accionarDado2(jugadorAnterior, jugadorActual, mazo, existeGanador, nombreGanadorHistorico, puntosGanadorHistorico);
+        if(validarCartasBlock(jugadorAnterior))
+        {
+            cout << "El jugador " << jugadorAnterior.nombre << " tiene todas las cartas bloqueadas.Vuelva a tirar el dado.\n";
+            accionarSegunDado(jugadorActual, jugadorAnterior, mazo, existeGanador, nombreGanadorHistorico, puntosGanadorHistorico);
+        }
         break;
     case 3:
         accionarDado3(jugadorActual, jugadorAnterior);
+        if(validarCartasBlock(jugadorAnterior))
+        {
+            cout << "El jugador " << jugadorAnterior.nombre << " tiene todas las cartas bloqueadas.Vuelva a tirar el dado.\n";
+            accionarSegunDado(jugadorActual, jugadorAnterior, mazo, existeGanador, nombreGanadorHistorico, puntosGanadorHistorico);
+        }
         break;
     case 4:
         accionarDado4(jugadorActual);
@@ -438,7 +443,7 @@ void accionarSegunDado(Jugador &jugadorActual, Jugador &jugadorAnterior, Carta m
         if (validarCartasBlock(jugadorActual))
         {
             cout << "ACCION DENEGADA! Todas sus cartas estan bloqueadas. Tire el dado nuevamente.\n\n";
-            accionarSegunDado(jugadorActual, jugadorAnterior, mazo);
+            accionarSegunDado(jugadorActual, jugadorAnterior, mazo, existeGanador, nombreGanadorHistorico, puntosGanadorHistorico);
         }
         else 
             accionarDado5(jugadorActual);
@@ -455,16 +460,16 @@ bool encontrarGanador(Jugador &jugadorActual, Jugador &jugadorAnterior, bool &ex
 {
     if (validarOrdenMano(jugadorActual))
     {
-        jugadorActual.puntos[GANAR] = PUNTOS_VICTORIA;
+        jugadorActual.puntos[(int)Puntajes::GANAR] = PUNTOS_VICTORIA;
 
-        cout << "PARTIDA FINALIZADA!! EL GANADOR ES: " << jugadorActual.nombre << endl;
+        cout << "\nPARTIDA FINALIZADA!! EL GANADOR ES: " << jugadorActual.nombre << endl;
         mostrarMano(jugadorActual, jugadorAnterior);
         sumarPuntosPorCartaDesordenada(jugadorActual, jugadorAnterior);
 
         if (!jugadorActual.pasoTurno)
-            jugadorActual.puntos[POR_PASAR_TURNO] = PUNTOS_PASAR_TURNO;
+            jugadorActual.puntos[(int)Puntajes::POR_PASAR_TURNO] = PUNTOS_PASAR_TURNO;
         if (!jugadorActual.sufrioRobo)
-            jugadorActual.puntos[POR_SUFRIR_ROBO] = PUNTOS_SUFRIR_ROBO;
+            jugadorActual.puntos[(int)Puntajes::POR_SUFRIR_ROBO] = PUNTOS_SUFRIR_ROBO;
 
         mostrarGanador(jugadorActual);
         calcularGanadorHistorico(jugadorActual, nombreGanadorHistorico, puntosGanadorHistorico);
@@ -479,13 +484,14 @@ void mostrarGanador(Jugador jugador)
 {
     cout << "PUNTAJE: \n";
     cout << "-------------------------------------------\n";
-    cout << "Ganar la partida: " << jugador.puntos[GANAR] << endl;
-    cout << "Robo ultima carta al jugador rival: " << jugador.puntos[GANAR_ROBANDO] << endl;
-    cout << "Cartas mal ubicadas del rival " << jugador.puntos[CARTA_MAL_UBICADA] / 5 << ": " << jugador.puntos[CARTA_MAL_UBICADA] << endl;
-    cout << "Sin pasar de turno: " << jugador.puntos[POR_PASAR_TURNO] << endl;
-    cout << "Sin haber sufrido robos: " << jugador.puntos[POR_SUFRIR_ROBO] << endl;
+    cout << "Ganar la partida: " << jugador.puntos[(int)Puntajes::GANAR] << endl;
+    cout << "Robo ultima carta al jugador rival: " << jugador.puntos[(int)Puntajes::GANAR_ROBANDO] << endl;
+    cout << "Cartas mal ubicadas del rival " << jugador.puntos[(int)Puntajes::CARTA_MAL_UBICADA] / 5 << ": " << jugador.puntos[(int)Puntajes::CARTA_MAL_UBICADA] << endl;
+    cout << "Sin pasar de turno: " << jugador.puntos[(int)Puntajes::POR_PASAR_TURNO] << endl;
+    cout << "Sin haber sufrido robos: " << jugador.puntos[(int)Puntajes::POR_SUFRIR_ROBO] << endl;
     cout << "-------------------------------------------\n";
     cout << "TOTAL: " << sumarTotalPuntos(jugador);
+    
 }
 
 void calcularGanadorHistorico(Jugador jugador, string &nombreGanadorHistorico, int &puntosGanadorHistorico)
@@ -529,7 +535,7 @@ int robarDelCarta(Carta mazo[])
 /**
  * 
 */
-void intercambiarConElCarta(Jugador &jugador, int cartaElegida, Carta mazo[])
+void intercambiarCartaConMazo(Jugador &jugador, int cartaElegida, Carta mazo[])
 {
     int cartaDelCarta = robarDelCarta(mazo);
 
@@ -553,14 +559,14 @@ void accionarDado1(Jugador &jugadorActual, Carta mazo[])
     if (jugadorActual.cartaBlock[cartaElegida])
         jugadorActual.cartaBlock[cartaElegida] = false;
 
-    intercambiarConElCarta(jugadorActual, cartaElegida, mazo);
+    intercambiarCartaConMazo(jugadorActual, cartaElegida, mazo);
 }
 
 /**
  * Robar una carta del mazo.
  * Intercambiarla con una del rival.
 */
-void accionarDado2(Jugador &jugadorAnterior, Carta mazo[])
+void accionarDado2(Jugador &jugadorAnterior, Jugador &jugadorActual, Carta mazo[],bool &existeGanador, string &nombreGanadorHistorico, int &puntosGanadorHistorico)
 {
     cout << "\nRobar del mazo e intercambiarla con una carta del contrario.\n";
     cout << "Seleccione la carta del rival (1 a 5): ";
@@ -572,7 +578,12 @@ void accionarDado2(Jugador &jugadorAnterior, Carta mazo[])
         cout << "Seleccione la carta del rival (1 a 5): ";
         cartaElegida = seleccionarCarta();
     }
-    intercambiarConElCarta(jugadorAnterior, cartaElegida, mazo);
+
+    intercambiarCartaConMazo(jugadorAnterior, cartaElegida, mazo);
+
+    if(validarOrdenMano(jugadorAnterior))
+        encontrarGanador(jugadorAnterior, jugadorActual, existeGanador, nombreGanadorHistorico, puntosGanadorHistorico);
+
 }
 
 /**
@@ -609,7 +620,7 @@ void intercambiarEntreJugadores(Jugador &jugadorActual, Jugador &jugadorAnterior
         jugadorActual.cartaBlock[cartaElegida] = false;
 
     if (validarOrdenMano(jugadorActual))
-        jugadorActual.puntos[GANAR_ROBANDO] = PUNTOS_VICTORIA_CON_ROBO;
+        jugadorActual.puntos[(int)Puntajes::GANAR_ROBANDO] = PUNTOS_VICTORIA_CON_ROBO;
 
     jugadorAnterior.sufrioRobo = true;
 }
@@ -681,16 +692,23 @@ int contarCartaMalUbicada(Jugador jugadorAnterior)
 
 void sumarPuntosPorCartaDesordenada(Jugador &jugadorActual, Jugador jugadorAnterior)
 {
-    int total = contarCartaMalUbicada(jugadorAnterior) * PUNTOS_CARTA_DESORDENADA;
-    jugadorActual.puntos[CARTA_MAL_UBICADA] = (Puntajes)total;
+    jugadorActual.puntos[(int)Puntajes::CARTA_MAL_UBICADA] = contarCartaMalUbicada(jugadorAnterior) * PUNTOS_CARTA_DESORDENADA;
 }
 
 /**
  * Genera un indice para el mazo.
+ * Iterar me asegura obtener un indice random.
  */
 int generarIndice()
 {
-    return rand() % 19;
+    int indice;
+
+    for(int i=0;i<SIZE_MAZO;i++)
+    {
+        indice = rand() % 19;
+    }
+    
+    return indice;
 }
 
 int tirarDado()
@@ -737,7 +755,7 @@ bool estaBloqueada(Jugador jugadorActual, int cartaElegida)
 }
 
 /**
- * Validar si existe una carta disponible para bloquear.
+ * Validar si existe al menos una carta desbloqueada.
 */
 bool validarCartasBlock(Jugador jugador)
 {
@@ -770,6 +788,14 @@ bool validarSeleccionCarta(int cartaElegida)
 bool validarCantidadChar(string nombre)
 {
     return nombre.size() > 20;
+}
+
+bool validarOpcion(char opcion)
+{
+    if(opcion != 'S' && opcion != 'N')
+        return true;
+
+    return false;
 }
 
 void solicitarUnNombre(Jugador &jugador, int nro_jugador)

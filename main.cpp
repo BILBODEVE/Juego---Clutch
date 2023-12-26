@@ -1,6 +1,6 @@
 #include <iostream>
-#include <cstdlib> //rand() ,srand()
-#include <time.h>  //time()
+#include <cstdlib> 
+#include <time.h>  
 #include "includes/funciones.h"
 #include "includes/estructuras.h"
 
