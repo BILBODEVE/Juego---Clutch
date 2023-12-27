@@ -6,7 +6,7 @@ struct Carta
     std::string palo;
 };
 
-enum class Puntajes : int{
+enum class Puntajes{
     GANAR,
     GANAR_ROBANDO,
     CARTA_MAL_UBICADA,
@@ -17,7 +17,6 @@ enum class Puntajes : int{
 struct Jugador
 {
     std::string nombre;
-
     Carta mano[5];
     int puntos[5] = {};
     bool cartaBlock[5] = {};

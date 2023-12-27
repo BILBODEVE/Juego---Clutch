@@ -129,22 +129,21 @@ void mostrarInstrucciones()
 char pedirOpcion()
 {
     char opcion;
+    cin >> opcion;
 
-    do
-    {
-        cout << "\nDesea volver al menu principal? S(Si)/N(No): ";
-        cin >> opcion;
-        opcion = toupper(opcion);
-    } while (validarOpcion(opcion));
-    
-
-    return opcion;
+    return toupper(opcion);
 }
 
 void volverAlMenu(Jugador jugador1, Jugador jugador2, Carta mazo[], string nombreGanadorHistorico, int puntosGanadorHistorico)
 {
 
+    cout << "\nDesea volver al menu principal? S(Si)/N(No): ";
     char opcion = pedirOpcion();
+    while(validarOpcion(opcion))
+    {
+        cout << "\nDesea volver al menu principal? S(Si)/N(No): ";
+        opcion = pedirOpcion();
+    }
 
     if (opcion == 'S')
         menuPrincipal(jugador1, jugador2, mazo, nombreGanadorHistorico, puntosGanadorHistorico);
@@ -304,6 +303,9 @@ void jugar(Jugador &jugador1, Jugador &jugador2, Carta mazo[20], string &nombreG
     repartirCartas(jugador2, mazo);
     buscarPrimerTurno(jugador1, jugador2, turno);
     mostrarDatosRonda(jugador1, jugador2, ronda, turno);
+    separador(62);
+    cout << "NOTA: Para finalizar la partida, ingrese un numero negativo\n";
+    separador(62);
     ejecutarRondas(jugador1, jugador2, mazo, turno, existeGanador, nombreGanadorHistorico, puntosGanadorHistorico);
 
     while (existeGanador == false)
@@ -385,7 +387,6 @@ string buscarPrimerTurno(Jugador &jugador1, Jugador &jugador2, string &turno)
 
 void accionarSegunDado(Jugador &jugadorActual, Jugador &jugadorAnterior, Carta mazo[20],bool &existeGanador, string &nombreGanadorHistorico, int &puntosGanadorHistorico)
 {
-
     cout << "Presione enter para tirar el dado...";
     getch();
     
@@ -486,7 +487,7 @@ void mostrarGanador(Jugador jugador)
     cout << "-------------------------------------------\n";
     cout << "Ganar la partida: " << jugador.puntos[(int)Puntajes::GANAR] << endl;
     cout << "Robo ultima carta al jugador rival: " << jugador.puntos[(int)Puntajes::GANAR_ROBANDO] << endl;
-    cout << "Cartas mal ubicadas del rival " << jugador.puntos[(int)Puntajes::CARTA_MAL_UBICADA] / 5 << ": " << jugador.puntos[(int)Puntajes::CARTA_MAL_UBICADA] << endl;
+    cout << "Cartas mal ubicadas del rival " << jugador.puntos[(int)Puntajes::CARTA_MAL_UBICADA] / PUNTOS_CARTA_DESORDENADA << ": " << jugador.puntos[(int)Puntajes::CARTA_MAL_UBICADA] << endl;
     cout << "Sin pasar de turno: " << jugador.puntos[(int)Puntajes::POR_PASAR_TURNO] << endl;
     cout << "Sin haber sufrido robos: " << jugador.puntos[(int)Puntajes::POR_SUFRIR_ROBO] << endl;
     cout << "-------------------------------------------\n";
@@ -515,6 +516,7 @@ int seleccionarCarta()
         cout << "Seleccione una carta (1 a 5): ";
         cin >> carta;
     }
+
     carta -= 1;
 
     return carta;
@@ -775,9 +777,7 @@ bool validarCartasBlock(Jugador jugador)
 bool validarSeleccionCarta(int cartaElegida)
 {
     if (cartaElegida < 1 || cartaElegida > 5)
-    {
         return true;
-    }
 
     return false;
 }
