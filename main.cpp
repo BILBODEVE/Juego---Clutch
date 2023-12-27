@@ -1,8 +1,7 @@
 #include <iostream>
 #include <cstdlib> 
 #include <time.h>  
-#include "includes/funciones.h"
-#include "includes/estructuras.h"
+#include "includes/menu.h"
 
 using namespace std;
 
@@ -14,7 +13,7 @@ int main()
     Jugador jugador1;
     Jugador jugador2;
 
-    jugarClutch(jugador1, jugador2, mazo);
+    menuPrincipal(jugador1, jugador2, mazo);
 
     return 0;
 }
