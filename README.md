@@ -3,11 +3,13 @@
 
 Clutch es el proyecto final propuesto para la cátedra de Laboratorio 1 dentro de la UTN FRGP.
 
-Fueron varias semanas de aprendizaje en donde pude consolidar lo aprendido durante el primer cuatrimestre 💪.
+Fueron varias semanas de aprendizaje en donde pude consolidar lo aprendido durante el primer cuatrimestre y mas 💪.
 
 ### Aprendizaje
 
 Para el desarrollo del proyecto utilicé nuevas herramientas como la librería `conio.h`  para el uso de **getch()**, `algorithms` para la función **swap()**, y `cstdlib` en complemento con `time` para generar números aleatorios.
+
+Aprendí e implementé datos de tipo **enum**, específicamente **enum** `class` para manejarlos dentro de un ámbito y darle legibilidad al código a la hora de analizarlo, ya que manejaba datos aislados que podía referenciar con la propia indexación de **enum**.
 
 Utilicé el tipo de dato **struct** para crear plantillas con las características comunes que puede tener un juego de cartas (mazo, jugadores, acciones, etc.). A su vez, trabajé con funciones que me permitieron resolver las diferentes problemáticas del juego. Al pasar las rondas, las características del jugador (mano, acciones, etc.) se modifican, por lo cual, utilicé mucho el pasaje de estructuras, arrays y variables por referencia para poder trabajar con los valores originales y no con una copia.
 
