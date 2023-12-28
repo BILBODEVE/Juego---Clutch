@@ -5,6 +5,14 @@
 
 using namespace std;
 
+bool validarOpcion(char opcion)
+{
+    if(opcion != 'S' && opcion != 'N')
+        return true;
+
+    return false;
+}
+
 /**
  * Cuenta la cantidad de cartas ordenadas.
  */
@@ -22,7 +30,7 @@ int contarCartasOrdenadas(Jugador jugador)
 }
 
 /**
- * Valida la cantidad de cartas ordenadas.
+ * Evalua si la mano esta ordenada.
  */
 bool validarOrdenMano(Jugador jugador)
 {
@@ -78,16 +86,5 @@ bool validarCantidadChar(string nombre)
     return nombre.size() > 20;
 }
 
-bool validarOpcion(char opcion)
-{
-    if(opcion != 'S' && opcion != 'N')
-        return true;
 
-    return false;
-}
 
-void finalizarJuego()
-{
-    cout << "\nGracias por visitar CLUTCH!!";
-    exit(0);
-}

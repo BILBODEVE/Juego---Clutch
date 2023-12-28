@@ -2,7 +2,7 @@
 #include <cstdlib>
 #include <conio.h>
 #include "../includes/funciones-dado.h"
-#include "../includes/recursos.h"
+#include "../includes/global.h"
 #include "../includes/inputs.h"
 #include "../includes/validaciones.h"
 #include "../includes/jugar.h"
@@ -10,6 +10,15 @@
 
 using namespace std;
 
+
+int tirarDado()
+{
+    return rand() % 6 + 1;
+}
+
+/**
+ * Ejecuta una accion segun el valor del dado.
+*/
 void accionarSegunDado(Jugador &jugadorActual, Jugador &jugadorAnterior, Carta mazo[20],bool &existeGanador, string &nombreGanadorHistorico, int &puntosGanadorHistorico)
 {
     cout << "Presione enter para tirar el dado...";
@@ -39,8 +48,9 @@ void accionarSegunDado(Jugador &jugadorActual, Jugador &jugadorAnterior, Carta m
 
         while (valor_dado < 1 || valor_dado > 5)
         {
-            cout << "Intentelo nuevamente a continuacion\n";
+            cout << "\nIntentelo nuevamente a continuacion\n";
             valor_dado = pedirOpcionMenu();
+            cout << endl;
         }
         
     }
@@ -86,33 +96,13 @@ void accionarSegunDado(Jugador &jugadorActual, Jugador &jugadorAnterior, Carta m
     cout << endl;
 }
 
-int robarDelMazo(Carta mazo[])
-{
-    int iCarta = generarIndice();
-
-    while (mazo[iCarta].carta == "0")
-    {
-        iCarta = generarIndice();
-    }
-
-    return iCarta;
-}
-
-void intercambiarCartaConMazo(Jugador &jugador, int cartaElegida, Carta mazo[])
-{
-    int cartaDelCarta = robarDelMazo(mazo);
-
-    swap(jugador.mano[cartaElegida].carta,mazo[cartaDelCarta].carta);
-    swap(jugador.mano[cartaElegida].palo,mazo[cartaDelCarta].palo);
-}
-
 /**
  * Robar una carta del mazo.
  * Intercambiar con una carta propia.
 */
 void accionarDado1(Jugador &jugadorActual, Carta mazo[])
 {
-    cout << "\nRobar del mazo e intercambiar con una carta del corral(1 a 5).\n";
+    cout << "\n#Robar del mazo e intercambiar con una carta del corral(1 a 5).\n";
     cout << "Seleccione una carta (1 a 5): ";
     int cartaElegida = seleccionarCarta();
    
@@ -132,7 +122,7 @@ void accionarDado1(Jugador &jugadorActual, Carta mazo[])
 */
 void accionarDado2(Jugador &jugadorAnterior, Jugador &jugadorActual, Carta mazo[],bool &existeGanador, string &nombreGanadorHistorico, int &puntosGanadorHistorico)
 {
-    cout << "\nRobar del mazo e intercambiarla con una carta del contrario.\n";
+    cout << "\n#Robar del mazo e intercambiarla con una carta del contrario.\n";
     cout << "Seleccione la carta del rival (1 a 5): ";
     int cartaElegida = seleccionarCarta();
 
@@ -155,7 +145,7 @@ void accionarDado2(Jugador &jugadorAnterior, Jugador &jugadorActual, Carta mazo[
 */
 void accionarDado3(Jugador &jugadorActual, Jugador &jugadorAnterior)
 {
-    cout << "\nElegir una carta propia e intercambiarla con una del contrario.\n";
+    cout << "\n#Elegir una carta propia e intercambiarla con una del contrario.\n";
     cout << "Seleccione una carta de su corral (1 a 5): ";
     int cartaElegida = seleccionarCarta();
     cout << "Seleccione una carta del corral contrario (1 a 5): ";
@@ -171,30 +161,11 @@ void accionarDado3(Jugador &jugadorActual, Jugador &jugadorAnterior)
 }
 
 /**
- * Intercambio de cartas.
-*/
-void intercambiarEntreJugadores(Jugador &jugadorActual, Jugador &jugadorAnterior, int cartaElegida, int cartaRival)
-{
-
-    swap(jugadorActual.mano[cartaElegida].carta,jugadorAnterior.mano[cartaRival].carta);
-    swap(jugadorActual.mano[cartaElegida].palo,jugadorAnterior.mano[cartaRival].palo);
-
-
-    if (jugadorActual.cartaBlock[cartaElegida]) 
-        jugadorActual.cartaBlock[cartaElegida] = false;
-
-    if (validarOrdenMano(jugadorActual))
-        jugadorActual.puntos[(int)Puntajes::GANAR_ROBANDO] = PUNTOS_VICTORIA_CON_ROBO;
-
-    jugadorAnterior.sufrioRobo = true;
-}
-
-/**
  * Intercambio entre cartas propias.
 */
 void accionarDado4(Jugador &jugadorActual)
 {
-    cout << "\nIntercambiar dos cartas del propio corral.\n";
+    cout << "\n#Intercambiar dos cartas del propio corral.\n";
     cout << "Seleccione la primer carta (1 a 5): ";
     int cartaElegida1 = seleccionarCarta();
     cout << "Seleccione la segunda carta (1 a 5): ";
@@ -219,7 +190,7 @@ void accionarDado4(Jugador &jugadorActual)
 */
 void accionarDado5(Jugador &jugadorActual)
 {
-    cout << "\nBloquear una carta del propio corral. El contrario no podra accionar sobre esta carta.\n";
+    cout << "\n#Bloquear una carta del propio corral. El contrario no podra accionar sobre esta carta.\n";
     cout << "Seleccione la carta que desea bloquear (1 a 5): ";
     int cartaElegida = seleccionarCarta();
     while(jugadorActual.cartaBlock[cartaElegida])
@@ -231,7 +202,42 @@ void accionarDado5(Jugador &jugadorActual)
     jugadorActual.cartaBlock[cartaElegida] = true;
 }
 
-int tirarDado()
+int robarDelMazo(Carta mazo[])
 {
-    return rand() % 6 + 1;
+    int iCarta = generarIndiceMazo();
+
+    while (mazo[iCarta].carta == "0")
+    {
+        iCarta = generarIndiceMazo();
+    }
+
+    return iCarta;
 }
+
+void intercambiarCartaConMazo(Jugador &jugador, int cartaElegida, Carta mazo[])
+{
+    int cartaDelCarta = robarDelMazo(mazo);
+
+    swap(jugador.mano[cartaElegida].carta,mazo[cartaDelCarta].carta);
+    swap(jugador.mano[cartaElegida].palo,mazo[cartaDelCarta].palo);
+}
+
+/**
+ * Intercambio de cartas.
+*/
+void intercambiarEntreJugadores(Jugador &jugadorActual, Jugador &jugadorAnterior, int cartaElegida, int cartaRival)
+{
+
+    swap(jugadorActual.mano[cartaElegida].carta,jugadorAnterior.mano[cartaRival].carta);
+    swap(jugadorActual.mano[cartaElegida].palo,jugadorAnterior.mano[cartaRival].palo);
+
+
+    if (jugadorActual.cartaBlock[cartaElegida]) 
+        jugadorActual.cartaBlock[cartaElegida] = false;
+
+    if (validarOrdenMano(jugadorActual))
+        jugadorActual.puntos[(int)Puntajes::GANAR_ROBANDO] = PUNTOS_VICTORIA_CON_ROBO;
+
+    jugadorAnterior.sufrioRobo = true;
+}
+

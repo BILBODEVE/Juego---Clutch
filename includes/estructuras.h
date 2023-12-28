@@ -25,4 +25,5 @@ struct Jugador
 };
 
 const std::string CARTAS[5] = {"10", "J", "Q", "K", "A"};
-const std::string PALOS[4] = {"\u2665", "\u2663", "\u2660", "\u2666"};
+//const std::string PALOS[4] = {"\u2665", "\u2663", "\u2660", "\u2666"};
+const std::string PALOS[4] = {"corazon", "trebol", "pica", "diamante"};

@@ -3,10 +3,22 @@
 #include "../includes/menu.h"
 #include "../includes/jugar.h"
 #include "../includes/inputs.h"
-#include "../includes/recursos.h"
+#include "../includes/global.h"
 #include "../includes/validaciones.h"
 
 using namespace std;
+
+void mostrarMenu()
+{
+    cout << "\n****** BIENVENIDO A CLUTCH ******\n";
+    separador(30);
+    cout << "1 - JUGAR \n";
+    cout << "2 - ESTADISTICAS\n";
+    cout << "3 - CREDITOS\n";
+    cout << "4 - INSTRUCCIONES\n";
+    separador(30);
+    cout << "0 - SALIR\n";
+}
 
 void menuPrincipal(Jugador &jugador1, Jugador &jugador2, Carta mazo[],string& nombreGanadorHistorico,int& puntosGanadorHistorico)
 {
