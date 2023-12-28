@@ -1,4 +1,5 @@
 #include <iostream>
+#include "../includes/variables.h"
 #include "../includes/menu.h"
 #include "../includes/jugar.h"
 #include "../includes/inputs.h"
@@ -7,10 +8,9 @@
 
 using namespace std;
 
-void menuPrincipal(Jugador &jugador1, Jugador &jugador2, Carta mazo[])
+void menuPrincipal(Jugador &jugador1, Jugador &jugador2, Carta mazo[],string& nombreGanadorHistorico,int& puntosGanadorHistorico)
 {
-    string nombreGanadorHistorico;
-    int puntosGanadorHistorico = 0;
+    
 
     mostrarMenu();
     int opcion = pedirOpcionMenu();
@@ -40,7 +40,7 @@ void menuPrincipal(Jugador &jugador1, Jugador &jugador2, Carta mazo[])
         return;
         break;
     }
-    volverAlMenu(jugador1, jugador2, mazo);
+    volverAlMenu(jugador1, jugador2, mazo, nombreGanadorHistorico, puntosGanadorHistorico);
 }
 
 void mostrarEstadisticas(string nombreGanadorHistorico, int puntosGanadorHistorico)
@@ -51,11 +51,11 @@ void mostrarEstadisticas(string nombreGanadorHistorico, int puntosGanadorHistori
 
 void mostrarCreditos()
 {
-    cout << "Desarrollo del proyecto a cargo de: \n";
+    cout << "\nDesarrollo del proyecto a cargo de: \n";
     cout << "   # Nombre: Facundo Tomas\n";
     cout << "   # Apellido: Araujo Avalos\n";
     cout << "   # Legajo: 29681\n";
-    cout << "   # Nombre del equipo: no hay equipo je";
+    cout << "   # Nombre del equipo: yo, yo y mi otro yo\n";
 }
 
 void mostrarInstrucciones()
@@ -82,9 +82,9 @@ void mostrarInstrucciones()
     cout << "\t #4 Intercambiar dos cartas del propio corral.\n";
     cout << "\t #5 Bloquear una carta del propio corral. El contrario no podra accionar sobre esta carta.\n";
     cout << "\t     Si la carta esta bloqueada se muestra entre [].\n";
-    cout << "\t #6 Elegir una opcion o pasar el turno.\n\n";
+    cout << "\t #6 Elegir una opcion o pasar el turno.\n";
     separador(40);
-    cout << "El comienzo de la partida esta determinado por el jugador con mayor cantidad de ases(A).\nEn el caso de que ningun jugador posea un AS o la cantidad en ambos sea la misma, se evalua la cantidad del segundo tipo de carta, en este caso, la \'K\'.\nEsta regla se aplica para todos los tipos de cartas subsiguientes.\n\n";
+    cout << "\nEl comienzo de la partida esta determinado por el jugador con mayor cantidad de ases(A).\nEn el caso de que ningun jugador posea un AS o la cantidad en ambos sea la misma, se evalua la cantidad del segundo tipo de carta, en este caso, la \'K\'.\nEsta regla se aplica para todos los tipos de cartas subsiguientes de forma descendente.\n\n";
 
     cout << "NOTA: la mano de cartas es denominada \"Corral\".\n\n";
 
@@ -92,7 +92,7 @@ void mostrarInstrucciones()
     
 }
 
-void volverAlMenu(Jugador jugador1, Jugador jugador2, Carta mazo[])
+void volverAlMenu(Jugador jugador1, Jugador jugador2, Carta mazo[],string& nombreGanadorHistorico, int& puntosGanadorHistorico)
 {
 
     cout << "\nDesea volver al menu principal? S(Si)/N(No): ";
@@ -104,7 +104,7 @@ void volverAlMenu(Jugador jugador1, Jugador jugador2, Carta mazo[])
     }
 
     if (opcion == 'S')
-        menuPrincipal(jugador1, jugador2, mazo);
+        menuPrincipal(jugador1, jugador2, mazo, nombreGanadorHistorico,puntosGanadorHistorico);
     else
         cout << "Gracias por visitar CLUTCH!";
 }

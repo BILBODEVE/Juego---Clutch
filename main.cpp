@@ -12,8 +12,10 @@ int main()
     Carta mazo[20];
     Jugador jugador1;
     Jugador jugador2;
+    string nombreGanadorHistorico;
+    int puntosGanadorHistorico;
 
-    menuPrincipal(jugador1, jugador2, mazo);
+    menuPrincipal(jugador1, jugador2, mazo, nombreGanadorHistorico, puntosGanadorHistorico);
 
     return 0;
 }

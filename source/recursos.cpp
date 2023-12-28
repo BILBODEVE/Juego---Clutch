@@ -78,13 +78,14 @@ void mostrarGanador(Jugador jugador)
 {
     cout << "PUNTAJE: \n";
     cout << "-------------------------------------------\n";
-    cout << "Ganar la partida: " << jugador.puntos[(int)Puntajes::GANAR] << endl;
-    cout << "Robo ultima carta al jugador rival: " << jugador.puntos[(int)Puntajes::GANAR_ROBANDO] << endl;
-    cout << "Cartas mal ubicadas del rival " << jugador.puntos[(int)Puntajes::CARTA_MAL_UBICADA] / PUNTOS_CARTA_DESORDENADA << ": " << jugador.puntos[(int)Puntajes::CARTA_MAL_UBICADA] << endl;
-    cout << "Sin pasar de turno: " << jugador.puntos[(int)Puntajes::POR_PASAR_TURNO] << endl;
-    cout << "Sin haber sufrido robos: " << jugador.puntos[(int)Puntajes::POR_SUFRIR_ROBO] << endl;
+    cout << "Ganar la partida: " << jugador.puntos[(int)Puntajes::GANAR] << " puntos." << endl;
+    cout << "Robo ultima carta al jugador rival: " << jugador.puntos[(int)Puntajes::GANAR_ROBANDO] << " puntos." << endl;
+    cout << "Cartas mal ubicadas del rival " << jugador.puntos[(int)Puntajes::CARTA_MAL_UBICADA] / PUNTOS_CARTA_DESORDENADA 
+         << ": " << jugador.puntos[(int)Puntajes::CARTA_MAL_UBICADA] << " puntos." << endl;
+    cout << "Sin pasar de turno: " << jugador.puntos[(int)Puntajes::POR_PASAR_TURNO] << " puntos." << endl;
+    cout << "Sin haber sufrido robos: " << jugador.puntos[(int)Puntajes::POR_SUFRIR_ROBO] << " puntos." << endl;
     cout << "-------------------------------------------\n";
-    cout << "TOTAL: " << sumarTotalPuntos(jugador);
+    cout << "TOTAL: " << sumarTotalPuntos(jugador) << "puntos.";
     
 }
 

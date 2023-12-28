@@ -1,5 +1,7 @@
 #pragma once
 
+
+
 const int SIZE_MAZO = 20;
 const int SIZE_MANO = 5;
 const int PUNTOS_VICTORIA = 15;

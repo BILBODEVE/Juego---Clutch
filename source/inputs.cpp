@@ -29,9 +29,10 @@ int seleccionarCarta()
 
     while (validarSeleccionCarta(carta))
     {
-        cout << "Intentelo nuevamente a continuacion.\n";
+        cout << "\nIntentelo nuevamente a continuacion (el valor del dado se conserva).\n";
         cout << "Seleccione la carta (1 a 5): ";
         cin >> carta;
+        cout << endl;
     }
 
     return carta - 1;
