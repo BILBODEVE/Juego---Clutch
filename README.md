@@ -69,5 +69,7 @@ La fase de crecimiento está determinada por las cartas y es la siguiente:
 
 Este proyecto esta desarrollado en Visual Studio Code, por lo tanto, necesitara instalar el compilador `GCC` junto con `GDB`. Siga los pasos de el siguiente [enlace](https://code.visualstudio.com/docs/cpp/config-mingw).
 
+En caso de tener problemas con la compilacion del codigo, puede instalar `Code runner` desde las extensiones de VScode y ejecutarlo con crtl + alt + N.
+
 
 
